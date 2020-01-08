@@ -1,4 +1,3 @@
-//111111
 package team.zucc.eecs.model;
 
 import java.sql.Timestamp;
