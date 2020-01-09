@@ -1,4 +1,4 @@
-//jyl
+//This is maintained by jyl. 
 package team.zucc.eecs.model;
 
 import java.sql.Timestamp;
