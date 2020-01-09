@@ -1,2 +1,4 @@
 
 .classpath
+.settings/org.eclipse.core.resources.prefs
+build/classes/team/zucc/eecs/dao/UserDaoImpl$1.class
