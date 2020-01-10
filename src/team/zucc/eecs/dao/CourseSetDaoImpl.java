@@ -20,7 +20,7 @@ public class CourseSetDaoImpl implements CourseSetDao {
 	}
 
 	@Override
-	public List<CourseSet> getCourseSetListByCoz_id(int coz_id) {
+	public List<CourseSet> getCourseSetListByCoz_id(String coz_id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -38,7 +38,7 @@ public class CourseSetDaoImpl implements CourseSetDao {
 	}
 
 	@Override
-	public void addCourseSet(int coz_id, int cs_acad_yr, int cs_sem) {
+	public void addCourseSet(String coz_id, int cs_acad_yr, int cs_sem) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -50,7 +50,7 @@ public class CourseSetDaoImpl implements CourseSetDao {
 	}
 
 	@Override
-	public void updateCourseSet(int cs_id, int coz_id, int cs_acad_yr, int cs_sem) {
+	public void updateCourseSet(int cs_id, String coz_id, int cs_acad_yr, int cs_sem) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -9,7 +9,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class Course {
 	
 	@JSONField(ordinal = 1)
-	private int coz_id;//ID，即课程号
+	private String coz_id;//ID，即课程号
 	
 	@JSONField(ordinal = 2)
 	private String coz_name_ch;//课程名称-中文
@@ -30,12 +30,12 @@ public class Course {
 	private Double coz_hours;//总学时
 	
 	
-	public int getCoz_id() {
+	public String getCoz_id() {
 		return coz_id;
 	}
 
 
-	public void setCoz_id(int coz_id) {
+	public void setCoz_id(String coz_id) {
 		this.coz_id = coz_id;
 	}
 

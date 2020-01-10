@@ -1,12 +1,89 @@
+<!-- This is maintained by jyl.  -->
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+	var courseList;
+    var total;
+       
+    function getCourseList(a, b) {
+    	$.ajax({
+			url: '/EECS/ajax/getCourseList',
+			type: 'POST',
+			data: JSON.stringify({
+			    a: a, 
+			    b: b
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				courseList = data.courseList;
+				total = data.total;
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
+       
+    function searchCourse(coz_id, coz_name_ch, coz_nature) {
+    	$.ajax({
+			url: '/EECS/ajax/searchCourse',
+			type: 'POST',
+			data: JSON.stringify({
+			    coz_id: coz_id, 
+			    coz_name_ch: coz_name_ch, 
+			    coz_nature: coz_nature
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				courseList = data.courseList;
+				total = data.total;
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+    }
+    
+    function showPage() {
+    	getCourseList(0, 10);
+    	var html = "";
+    	for (var i = 0; i < courseList.length; i++){
+			var course = "";
+			var coz_id = courseList[i].coz_id;
+			var coz_name_ch = courseList[i].coz_name_ch;
+			var coz_name_eng = courseList[i].coz_name_eng;
+			var coz_nature = courseList[i].coz_nature;
+			var coz_credit = courseList[i].coz_credit;
+			var coz_hrs_wk = courseList[i].coz_hrs_wk;
+			var coz_hours = courseList[i].coz_hours;
+			
+			book = '<div>' + coz_id +  coz_name_ch +  coz_name_eng +  coz_nature + coz_credit + coz_hrs_wk + coz_hours + '</div>';
+		    html += book;
+		} 
+	    
+		document.getElementById("test").innerHTML = html; 
+    }
+    
+    
+    $(function(){
+    	showPage();
+	})
+       
+</script>
+
 <body>
 课程总览
-
+	<div id="test"> </div>
 
 </body>
 </html>
