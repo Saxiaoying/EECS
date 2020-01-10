@@ -12,13 +12,14 @@ public interface CourseDao {
 	//查询
 	List<Course> getCourseList();
 	List<Course> getCourseListFromAtoB(int a, int b);
-	List<Course> getCourseListByCoz_id(String coz_id);
+	Course getCourseByCoz_id(String coz_id);//精确查询
+	List<Course> getCourseListByCoz_id(String coz_id);//模糊查询
 	List<Course> getCourseListByCoz_name_ch(String coz_name_ch); //模糊查询
 	List<Course> getCourseListByCoz_nature(String coz_nature); //模糊查询
 	
 	//添加
 	@Transactional(propagation = Propagation.REQUIRED)
-	void addCourse(String coz_id, String coz_name_ch, String coz_name_eng, String coz_nature, double coz_credit, double coz_hrs_wk, double coz_hours);
+	void addCourse(String coz_id, String coz_name_ch, String coz_name_eng, String coz_nature, double coz_credit, String coz_hrs_wk, double coz_hours);
 	
 	//删除
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -26,5 +27,5 @@ public interface CourseDao {
 	
 	//修改
 	@Transactional(propagation = Propagation.REQUIRED)
-	void updateCourse(String coz_id, String coz_name_ch, String coz_name_eng, String coz_nature, double coz_credit, double coz_hrs_wk, double coz_hours);
+	void updateCourse(String coz_id, String coz_name_ch, String coz_name_eng, String coz_nature, double coz_credit, String coz_hrs_wk, double coz_hours);
 }

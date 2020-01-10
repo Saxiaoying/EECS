@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.poi.ss.formula.CollaboratingWorkbooksEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sun.org.apache.regexp.internal.recompile;
 
 import team.zucc.eecs.dao.CourseDao;
 import team.zucc.eecs.model.Course;
@@ -20,15 +20,25 @@ public class CourseServiceImpl implements CourseService {
 	private CourseDao courseDao;
 	
 	@Override
-	public List<Course> getCourseListFromAtoB(int a, int b){
-		List<Course> courseList = new ArrayList<Course>();
+	public Course getCourseByCoz_id(String coz_id) {
 		try {
-			courseList = courseDao.getCourseListFromAtoB(a, b);
-			return courseList;
+			Course course = courseDao.getCourseByCoz_id(coz_id);
+			return course;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public List<Course> getCourseListFromAtoB(int a, int b){
+		List<Course> courseList = new ArrayList<Course>();
+		try {
+			courseList = courseDao.getCourseListFromAtoB(a, b);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return courseList;
 	}
 
 	@Override
@@ -63,10 +73,47 @@ public class CourseServiceImpl implements CourseService {
 			
 			courses.clear();
 			
-			return courseList;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return courseList;
+	}
+
+	@Override
+	public int addCourse(String coz_id, String coz_name_ch, String coz_name_eng, String coz_nature, double coz_credit,
+			String coz_hrs_wk, double coz_hours) {
+		try {
+			Course course = courseDao.getCourseByCoz_id(coz_id);
+			if(course != null) {
+				return 1; //已经存在
+			}
+			
+			courseDao.addCourse(coz_id, coz_name_ch, coz_name_eng, coz_nature, coz_credit, coz_hrs_wk, coz_hours);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;//成功
+	}
+
+	@Override
+	public int deleteCourseByCoz_id(String coz_id) {
+		try {
+			courseDao.deleteCourseByCoz_id(coz_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return 0;
+	}
+
+	@Override
+	public int updateCourse(String coz_id, String coz_name_ch, String coz_name_eng, String coz_nature,
+			double coz_credit, String coz_hrs_wk, double coz_hours) {
+		try {
+			courseDao.updateCourse(coz_id, coz_name_ch, coz_name_eng, coz_nature, coz_credit, coz_hrs_wk, coz_hours);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 1; //失败
+		}
+		return 0;//成功
 	}
 }

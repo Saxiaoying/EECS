@@ -24,7 +24,7 @@ public class Course {
 	private Double coz_credit;//学分
 	
 	@JSONField(ordinal = 6)
-	private Double coz_hrs_wk;//周学时
+	private String coz_hrs_wk;//周学时
 
 	@JSONField(ordinal = 7)
 	private Double coz_hours;//总学时
@@ -80,12 +80,12 @@ public class Course {
 	}
 
 
-	public Double getCoz_hrs_wk() {
+	public String getCoz_hrs_wk() {
 		return coz_hrs_wk;
 	}
 
 
-	public void setCoz_hrs_wk(Double coz_hrs_wk) {
+	public void setCoz_hrs_wk(String coz_hrs_wk) {
 		this.coz_hrs_wk = coz_hrs_wk;
 	}
 
