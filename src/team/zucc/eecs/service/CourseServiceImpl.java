@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.poi.ss.formula.ptg.LessEqualPtg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,17 @@ import team.zucc.eecs.model.Course;
 public class CourseServiceImpl implements CourseService {
 	@Autowired
 	private CourseDao courseDao;
+	
+	@Override
+	public int getCourseNumber() {
+		try {
+			int num = courseDao.getCourseNumber();
+			return num;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 	
 	@Override
 	public Course getCourseByCoz_id(String coz_id) {
@@ -43,36 +55,31 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public List<Course> getCourseListByInf(String coz_id, String coz_name_ch, String coz_nature) {
-		Set<Course> courses = new HashSet<Course>();
+		System.out.println("进入CourseServiceImpl-getCourseListByInf");
 		List<Course> courseList = new ArrayList<Course>();
 		try {
-			if(coz_id != null) {
-				List<Course> tmp = courseDao.getCourseListByCoz_id(coz_id);
-				for (Course c: tmp) {
-					courses.add(c);
+			if(coz_nature.compareTo("课程性质（所有）") == 0)  {
+				if (coz_id != null && coz_name_ch != null) {
+					courseList = courseDao.getCourseListByCoz_idAndCoz_name_ch(coz_id, coz_name_ch);
+				} else if (coz_id != null) {
+					courseList = courseDao.getCourseListByCoz_id(coz_id);
+				} else if (coz_name_ch != null) {
+					courseList = courseDao.getCourseListByCoz_name_ch(coz_name_ch);
+				} else {
+					courseList = courseDao.getCourseList();
+				}
+			} else {
+				System.out.println(coz_nature);
+				if (coz_id != null && coz_name_ch != null) {
+					courseList = courseDao.getCourseListByCoz_idAndCoz_name_chAndCourse_nature(coz_id, coz_name_ch, coz_nature);
+				} else if (coz_id != null) {
+					courseList = courseDao.getCourseListByCoz_natureAndCoz_id(coz_nature, coz_id);
+				} else if (coz_name_ch != null) {
+					courseList = courseDao.getCourseListByCoz_name_chAndCoz_nature(coz_name_ch, coz_nature);
+				} else {
+					courseList = courseDao.getCourseListByCoz_nature(coz_nature);
 				}
 			}
-			
-			if (coz_name_ch != null) {
-				List<Course> tmp = courseDao.getCourseListByCoz_name_ch(coz_name_ch);
-				for (Course c: tmp) {
-					courses.add(c);
-				}
-			}
-			
-			if (coz_name_ch != null) {
-				List<Course> tmp = courseDao.getCourseListByCoz_nature(coz_nature);
-				for (Course c: tmp) {
-					courses.add(c);
-				}
-			}
-			
-			for (Course c: courses) {
-				courseList.add(c);
-			}
-			
-			courses.clear();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

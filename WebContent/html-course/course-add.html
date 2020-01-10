@@ -99,12 +99,12 @@
               </label>
               <div class="layui-input-inline">
                   <select id="coz_nature">
-		              <option>通识必修课程</option>
-		              <option>通识选修课程</option>
-		              <option>大类基础课程</option>
-		              <option>学科基础课程</option>
-		              <option>专业必修课程</option>
-		              <option>专业选修课程</option>
+		              <option value="通识必修课程">通识必修课程</option>
+		              <option value="通识选修课程">通识选修课程</option>
+		              <option value="大类基础课程">大类基础课程</option>
+		              <option value="学科基础课程">学科基础课程</option>
+		              <option value="专业必修课程">专业必修课程</option>
+		              <option value="专业选修课程">专业选修课程</option>
                   </select>
               </div>
           </div>
@@ -123,23 +123,23 @@
               <li>
 	              <div class="layui-input-inline" style="width:70px">
 	                  <select id="coz_hrs_wk1">
-			              <option>0</option>
-			              <option>1</option>
-			              <option>2</option>
-			              <option>3</option>
-			              <option>4</option>
-			              <option>5</option>
+			              <option value="0">0</option>
+			              <option value="1">1</option>
+			              <option value="2">2</option>
+			              <option value="3">3</option>
+			              <option value="4">4</option>
+			              <option value="5">5</option>
 	                  </select>  
 	              </div>
 	              <div class="layui-input-inline" style="width:30px; text-align:center; font-size:26px;"> - </div>
 	              <div class="layui-input-inline" style="width:70px">
 	                  <select id="coz_hrs_wk2">
-			              <option>0</option>
-			              <option>1</option>
-			              <option>2</option>
-			              <option>3</option>
-			              <option>4</option>
-			              <option>5</option>
+			              <option value="0">0</option>
+			              <option value="1">1</option>
+			              <option value="2">2</option>
+			              <option value="3">3</option>
+			              <option value="4">4</option>
+			              <option value="5">5</option>
 	                  </select>
 	              </div>
               </li>
@@ -156,7 +156,7 @@
           <div class="layui-form-item">
               <label for="L_repass" class="layui-form-label">
               </label>
-              <button  class="layui-btn" lay-filter="add" lay-submit="" onclick="addCourse()">增加</button>
+              <button  class="layui-btn" lay-filter="add" lay-submit="" type="button"  onclick="addCourse()">增加</button>
           </div>
 </body>
 </html>

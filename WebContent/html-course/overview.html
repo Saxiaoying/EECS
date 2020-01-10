@@ -24,7 +24,9 @@
 <script type="text/javascript">
 	var courseList;
     var total;
-       
+    var cur_page = 1;
+    var total_page;
+    var page_num = 5;
     function getCourseList(a, b) {
     	$.ajax({
 			url: '/EECS/ajax/getCourseList',
@@ -39,6 +41,7 @@
 			success: function(data) {
 				courseList = data.courseList;
 				total = data.total;
+				total_page = Math.ceil(total / page_num);
 			},
 			error: function() {
 				alert('服务器错误');
@@ -46,14 +49,14 @@
 		});
 	}
        
-    function searchCourse(coz_id, coz_name_ch, coz_nature) {
+    function searchCourse() {
     	$.ajax({
 			url: '/EECS/ajax/searchCourse',
 			type: 'POST',
 			data: JSON.stringify({
-			    coz_id: coz_id, 
-			    coz_name_ch: coz_name_ch, 
-			    coz_nature: coz_nature
+				coz_id:$("#coz_id").val(),
+				coz_name_ch:$("#coz_name_ch").val(),
+				coz_nature:$("#coz_nature").val()
 			}),
 			dataType: 'json',
 			async:false,
@@ -61,6 +64,12 @@
 			success: function(data) {
 				courseList = data.courseList;
 				total = data.total;
+				total_page = Math.ceil(total / page_num);
+				if(data.state == 'NULL') {
+					alert("请输入要查询的信息!");
+				} else if(data.state == 'EMPTY') {
+					alert("暂无符合条件的数据!");
+				}
 			},
 			error: function() {
 				alert('服务器错误');
@@ -68,10 +77,18 @@
 		});
     }
     
-    function showPage() {
-    	getCourseList(0, 10);
+    function showPage(cur, typ) {
+    	cur_page = cur;
+    	var s, e;
+    	if(typ == 0) {
+    		getCourseList(cur_page*page_num - page_num, cur_page*page_num);
+    		s = 0; e = courseList.length;
+    	} else {
+    		s = cur_page*page_num - page_num;
+    		e = Math.min(cur_page*page_num, courseList.length);
+    	}
     	var html = "";
-    	for (var i = 0; i < courseList.length; i++){
+    	for (var i = s; i < e; i++){
 			var course = "";
 			var coz_id = courseList[i].coz_id;
 			var coz_name_ch = courseList[i].coz_name_ch;
@@ -107,12 +124,42 @@
 		document.getElementById("courseList").innerHTML = html; 
 		
 		document.getElementById("total").innerHTML = "共有数据：" + total +"条"; 
+		
+		var nt = cur+1;
+		var pre = cur-1;
+		var html2 = "";
+		if(cur <= 3) {
+			for(var i = 1; i <= Math.min(total_page, 5); i++) {
+				if(cur == i) html2 += '<span class="current" href="javascript: onclick=showPage(' + i + ',' + typ + ')">'  + i + '</span>';
+				else html2 += '<a class="num" href="javascript: onclick=showPage(' + i + ',' + typ + ')">' + i + '</a>';
+			}
+			if(total_page > 5) html2 += '<a class="next" href="javascript: onclick=showPage(' + total_page + ',' + typ + ')">&gt;&gt;</a>';
+		} else if(cur > total_page-2) {
+			if(total_page > 5) html2 = '<a href="javascript: onclick=showPage(' + 1 + ',' + typ + ')">&lt;&lt;</i></a>';
+			for(var i = Math.max(total_page - 4, 1); i <= total_page; i++) {
+				if(cur == i) html2 += '<span class="current" href="javascript: onclick=showPage(' + i + ',' + typ + ')">'  + i + '</span>';
+				else html2 += '<a class="num" href="javascript: onclick=showPage(' + i + ',' + typ + ')">' + i + '</a>';
+			}
+		} else {
+			if(total_page > 5) html2 = '<a href="javascript: onclick=showPage(' + 1 + ',' + typ + ')">&lt;&lt;</i></a>';
+			for(var i = cur-2; i <= Math.min(total_page, cur+2); i++) {
+				if(cur == i) html2 += '<span class="current" href="" onclick="showPage(' + i + ',' + typ + ')">' + i +'</span>';
+				else html2 += '<a class="num" href="javascript: onclick=showPage(' + i + ',' + typ + ')">' + i + '</a>';
+			}
+			if(total_page > cur+2) html2 += '<a class="next" href="javascript: onclick=showPage(' + total_page + ',' + typ + ')">&gt;&gt;</a>';
+		}
+		html2 += "  <br>一共 : "  + total_page + " 页";
+		document.getElementById("page_list").innerHTML = html2; 
     }
     
-    
     $(function(){
-    	showPage();
+    	showPage(1, 0);
 	})
+	
+	function show_searchCourse(){
+    	searchCourse();
+    	showPage(1, 1);
+    }
        
 </script>
 
@@ -131,20 +178,20 @@
     <div class="x-body">
       <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so">
-          <input class="layui-input" placeholder="课程号" name="coz_id" id="coz_id">
-          <input class="layui-input" placeholder="课程中文名" name="coz_name_ch" id="coz_name_ch">
+          <input class="layui-input" placeholder="课程号"  id="coz_id">
+          <input class="layui-input" placeholder="课程中文名"  id="coz_name_ch">
           <div class="layui-input-inline">
-            <select name="contrller">
-              <option>课程性质（所有）</option>
-              <option>通识必修课程</option>
-              <option>通识选修课程</option>
-              <option>大类基础课程</option>
-              <option>学科基础课程</option>
-              <option>专业必修课程</option>
-              <option>专业选修课程</option>
+            <select id = "coz_nature">
+              <option value="课程性质（所有）">课程性质（所有）</option>
+              <option value="通识必修课程">通识必修课程</option>
+              <option value="通识选修课程">通识选修课程</option>
+              <option value="大类基础课程">大类基础课程</option>
+              <option value="学科基础课程">学科基础课程</option>
+              <option value="专业必修课程">专业必修课程</option>
+              <option value="专业选修课程">专业选修课程</option>
             </select>
           </div>
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+          <button class="layui-btn" type="button" onclick="show_searchCourse()"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
@@ -175,13 +222,7 @@
       
       
       <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
+        <div id="page_list">
         </div>
       </div>
 
