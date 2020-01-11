@@ -11,7 +11,7 @@ public class CourseSet {
 	private int cs_id;//开课流水号
 	
 	@JSONField(ordinal = 2)
-	private int coz_id;//课程号（外码）
+	private String coz_id;//课程号（外码）
 	
 	@JSONField(ordinal = 3)
 	private int cs_acad_yr;//学年
@@ -30,12 +30,12 @@ public class CourseSet {
 	}
 
 
-	public int getCoz_id() {
+	public String getCoz_id() {
 		return coz_id;
 	}
 
 
-	public void setCoz_id(int coz_id) {
+	public void setCoz_id(String coz_id) {
 		this.coz_id = coz_id;
 	}
 
