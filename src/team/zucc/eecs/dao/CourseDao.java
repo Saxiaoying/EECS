@@ -22,7 +22,7 @@ public interface CourseDao {
 	List<Course> getCourseListByCoz_name_chAndCoz_nature(String coz_name_ch, String coz_nature); //模糊查询
 	List<Course> getCourseListByCoz_natureAndCoz_id(String coz_nature, String coz_id); //模糊查询
 	
-	List<Course> getCourseListByCoz_idAndCoz_name_chAndCourse_nature(String coz_id, String coz_name_ch, String coz_nature);//模糊查询
+	List<Course> getCourseListByInf(String coz_id, String coz_name_ch, String coz_nature);//模糊查询
 	
 	
 	//添加

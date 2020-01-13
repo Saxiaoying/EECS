@@ -71,7 +71,7 @@ public class CourseServiceImpl implements CourseService {
 			} else {
 				System.out.println(coz_nature);
 				if (coz_id != null && coz_name_ch != null) {
-					courseList = courseDao.getCourseListByCoz_idAndCoz_name_chAndCourse_nature(coz_id, coz_name_ch, coz_nature);
+					courseList = courseDao.getCourseListByInf(coz_id, coz_name_ch, coz_nature);
 				} else if (coz_id != null) {
 					courseList = courseDao.getCourseListByCoz_natureAndCoz_id(coz_nature, coz_id);
 				} else if (coz_name_ch != null) {

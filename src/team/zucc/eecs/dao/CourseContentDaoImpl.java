@@ -103,12 +103,12 @@ public class CourseContentDaoImpl implements CourseContentDao {
 	}
 
 	@Override
-	public void addCourseContent(int cont_id, int cs_id, int cont_typ, String cont_name, int cont_num, String cont_cont,
+	public void addCourseContent(int cs_id, int cont_typ, String cont_name, int cont_num, String cont_cont,
 			String cont_method, String cont_key, String cont_diff, double cont_hrs_tch, double cont_hrs_pr,
 			String cont_cla_exe, String cont_hw) {
-		template.update("insert into tb_cont (cont_id, cs_id, cont_typ, cont_name, cont_num, cont_cont, cont_method, "
+		template.update("insert into tb_cont (cs_id, cont_typ, cont_name, cont_num, cont_cont, cont_method, "
 				+ "cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw)  "
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", cont_id, cs_id, cont_typ, cont_name, cont_num, cont_cont,
+				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", cs_id, cont_typ, cont_name, cont_num, cont_cont,
 				cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw);
 	}
 

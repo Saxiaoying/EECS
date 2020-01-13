@@ -94,9 +94,9 @@ public class CourseObjectiveDaoImpl implements CourseObjectiveDao {
 	}
 
 	@Override
-	public void addCourseObjective(int co_id, int cs_id, int co_num, String co_cont) {
-		template.update("insert into tb_coz_obj (co_id, cs_id, co_num, co_cont)  "
-				+ "values (?, ?, ?, ?)", co_id, cs_id, co_num, co_cont);
+	public void addCourseObjective(int cs_id, int co_num, String co_cont) {
+		template.update("insert into tb_coz_obj (cs_id, co_num, co_cont)  "
+				+ "values (?, ?, ?)", cs_id, co_num, co_cont);
 	}
 
 	@Override

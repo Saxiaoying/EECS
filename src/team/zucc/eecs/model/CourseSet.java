@@ -14,10 +14,10 @@ public class CourseSet {
 	private String coz_id;//课程号（外码）
 	
 	@JSONField(ordinal = 3)
-	private int cs_acad_yr;//学年
+	private String cs_acad_yr;//学年
 	
 	@JSONField(ordinal = 4)
-	private int cs_sem;//学期
+	private String cs_sem;//学期
 	
 	
 	public int getCs_id() {
@@ -40,22 +40,22 @@ public class CourseSet {
 	}
 
 
-	public int getCs_acad_yr() {
+	public String getCs_acad_yr() {
 		return cs_acad_yr;
 	}
 
 
-	public void setCs_acad_yr(int cs_acad_yr) {
+	public void setCs_acad_yr(String cs_acad_yr) {
 		this.cs_acad_yr = cs_acad_yr;
 	}
 
 
-	public int getCs_sem() {
+	public String getCs_sem() {
 		return cs_sem;
 	}
 
 
-	public void setCs_sem(int cs_sem) {
+	public void setCs_sem(String cs_sem) {
 		this.cs_sem = cs_sem;
 	}
 

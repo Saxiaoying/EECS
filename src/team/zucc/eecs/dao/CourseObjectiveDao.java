@@ -17,7 +17,7 @@ public interface CourseObjectiveDao {
 		
 		//添加
 		@Transactional(propagation = Propagation.REQUIRED)
-		void addCourseObjective(int co_id, int cs_id,  int co_num,  String co_cont);
+		void addCourseObjective(int cs_id,  int co_num,  String co_cont);
 		
 		//删除
 		@Transactional(propagation = Propagation.REQUIRED)

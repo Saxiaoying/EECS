@@ -223,8 +223,7 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public List<Course> getCourseListByCoz_idAndCoz_name_chAndCourse_nature(String coz_id, String coz_name_ch,
-			String coz_nature) {
+	public List<Course> getCourseListByInf(String coz_id, String coz_name_ch, String coz_nature) {
 		List<Course> courseList = new ArrayList<>();
 		String sql = "select * from tb_coz where coz_id like '%" + coz_id + "%' and coz_nature like '%" + coz_nature +
 				"%' and coz_name_ch like '%" + coz_name_ch +  "%'";

@@ -19,24 +19,7 @@ import team.zucc.eecs.model.CourseSet;
 public class CourseSetDaoImpl implements CourseSetDao {
 	@Autowired
 	JdbcTemplate template;
-
-	@Override
-	public List<CourseSet> getCourseSetList() {
-		List<CourseSet> courseSetList = new ArrayList<>();
-		String sql = "select * from tb_coz_set";
-		courseSetList = this.template.query(sql, new RowMapper<CourseSet>() {
-			public CourseSet mapRow(ResultSet rs, int rowNum) throws SQLException {
-				CourseSet cs = new CourseSet();
-				cs.setCs_id(rs.getInt("cs_id"));
-				cs.setCoz_id(rs.getString("coz_id"));
-				cs.setCs_acad_yr(rs.getInt("cs_acad_yr"));
-				cs.setCs_sem(rs.getInt("cs_sem"));
-				return cs;
-			}
-		});
-		return courseSetList;
-	}
-
+	
 	@Override
 	public CourseSet getCourseSetByCs_id(int cs_id) {
 		return template.query("select * from tb_coz_set where cs_id ='" +cs_id + "'", new ResultSetExtractor<CourseSet>() {
@@ -46,8 +29,8 @@ public class CourseSetDaoImpl implements CourseSetDao {
 					CourseSet cs = new CourseSet();
 					cs.setCs_id(rs.getInt("cs_id"));
 					cs.setCoz_id(rs.getString("coz_id"));
-					cs.setCs_acad_yr(rs.getInt("cs_acad_yr"));
-					cs.setCs_sem(rs.getInt("cs_sem"));
+					cs.setCs_acad_yr(rs.getString("cs_acad_yr"));
+					cs.setCs_sem(rs.getString("cs_sem"));
 					return cs;
 				} else {
 					return null;
@@ -56,89 +39,76 @@ public class CourseSetDaoImpl implements CourseSetDao {
 			
 		});
 	}
-
+	
 	@Override
-	public List<CourseSet> getCourseSetListByCoz_id(String coz_id) {
-		List<CourseSet> courseSetList = new ArrayList<>();
-		String sql = "select * from tb_coz_set where coz_id like '%" + coz_id + "%'";
-		courseSetList = this.template.query(sql, new RowMapper<CourseSet>() {
-			public CourseSet mapRow(ResultSet rs, int rowNum) throws SQLException {
-				CourseSet cs = new CourseSet();
-				cs.setCs_id(rs.getInt("cs_id"));
-				cs.setCoz_id(rs.getString("coz_id"));
-				cs.setCs_acad_yr(rs.getInt("cs_acad_yr"));
-				cs.setCs_sem(rs.getInt("cs_sem"));
-				return cs;
+	public int getCourseSetNumberByInf(String coz_id, String cs_acad_yr, String cs_sem, String coz_name_ch, String coz_nature) {
+		String sql = "select count(*) from tb_coz_set where cs_acad_yr like '%" + cs_acad_yr + "%' and cs_sem like '%" + cs_sem + "%' and coz_id in"
+        		+ "(select coz_id from tb_coz where coz_id like '%" + coz_id + "%' "
+        				+ "and coz_name_ch like '%" + coz_name_ch + "%' "
+        				+ "and coz_nature like '%" + coz_nature + "%')";
+        
+		return template.query(sql, new ResultSetExtractor<Integer>() {
+			@Override
+			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+				if (rs.next()) {
+					return rs.getInt("count(*)");
+				} else {
+					return 0;
+				}
 			}
+			
 		});
-		return courseSetList;
 	}
-
+	
 	@Override
-	public List<CourseSet> getCourseSetListByCs_acad_yr(int cs_acad_yr) {
+	public List<CourseSet> getCourseSetListByInfFromAtoB(int a, int b, String coz_id, String cs_acad_yr, String cs_sem, String coz_name_ch, String coz_nature) {
 		List<CourseSet> courseSetList = new ArrayList<>();
-		String sql = "select * from tb_coz_set where cs_acad_yr =" + cs_acad_yr;
-		courseSetList = this.template.query(sql, new RowMapper<CourseSet>() {
-			public CourseSet mapRow(ResultSet rs, int rowNum) throws SQLException {
-				CourseSet cs = new CourseSet();
-				cs.setCs_id(rs.getInt("cs_id"));
-				cs.setCoz_id(rs.getString("coz_id"));
-				cs.setCs_acad_yr(rs.getInt("cs_acad_yr"));
-				cs.setCs_sem(rs.getInt("cs_sem"));
-				return cs;
-			}
-		});
-		return courseSetList;
-	}
-
-	@Override
-	public List<CourseSet> getCourseSetListByCs_sem(int cs_sem) {
-		List<CourseSet> courseSetList = new ArrayList<>();
-		String sql = "select * from tb_coz_set where cs_sem =" + cs_sem;
-		courseSetList = this.template.query(sql, new RowMapper<CourseSet>() {
-			public CourseSet mapRow(ResultSet rs, int rowNum) throws SQLException {
-				CourseSet cs = new CourseSet();
-				cs.setCs_id(rs.getInt("cs_id"));
-				cs.setCoz_id(rs.getString("coz_id"));
-				cs.setCs_acad_yr(rs.getInt("cs_acad_yr"));
-				cs.setCs_sem(rs.getInt("cs_sem"));
-				return cs;
-			}
-		});
-		return courseSetList;
-	}
-
-	@Override
-	public List<CourseSet> getCourseSetListByInf(String coz_id, int cs_acad_yr, int cs_sem) {
-		List<CourseSet> courseSetList = new ArrayList<>();
-		String sql = "";
-		if (cs_acad_yr < 0 && cs_sem < 0) {
-			sql = "select * from tb_coz_set where coz_id like '%" + coz_id + "%'";
-		} else if (cs_sem < 0) {
-			sql = "select * from tb_coz_set where coz_id like '%" + coz_id + "%' and cs_acad_yr=" + cs_acad_yr;
-		} else if (cs_acad_yr < 0){
-			sql = "select * from tb_coz_set where coz_id like '%" + coz_id + "%' and cs_sem=" + cs_sem ;
-		} else {
-			sql = "select * from tb_coz_set where coz_id like '%" + coz_id + "%' and cs_acad_yr=" + cs_acad_yr + " and cs_sem=" + cs_sem ;
-		}
+		
+		// "select * from tb_coz_set where cs_acad_yr=2019 and cs_sem=1 and 
+		// coz_id in(select coz_id from tb_coz where coz_id like '%1%' and coz_name_ch LIKE '%测%' and coz_nature like '%通识%')";
+		String sql = "select * from tb_coz_set where cs_acad_yr like '%" + cs_acad_yr + "%' and cs_sem like '%" + cs_sem + "%' and coz_id in"
+        		+ "(select coz_id from tb_coz where coz_id like '%" + coz_id + "%' "
+        				+ "and coz_name_ch like '%" + coz_name_ch + "%' "
+        				+ "and coz_nature like '%" + coz_nature + "%')";
+		
+		int num = b-a;
+		String tmp = " limit " + a + ", " + num;
+		sql = sql + tmp;
 		
 		courseSetList = this.template.query(sql, new RowMapper<CourseSet>() {
 			public CourseSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 				CourseSet cs = new CourseSet();
 				cs.setCs_id(rs.getInt("cs_id"));
 				cs.setCoz_id(rs.getString("coz_id"));
-				cs.setCs_acad_yr(rs.getInt("cs_acad_yr"));
-				cs.setCs_sem(rs.getInt("cs_sem"));
+				cs.setCs_acad_yr(rs.getString("cs_acad_yr"));
+				cs.setCs_sem(rs.getString("cs_sem"));
 				return cs;
 			}
 		});
 		return courseSetList;
 	}
-
+	
 	@Override
-	public void addCourseSet(String coz_id, int cs_acad_yr, int cs_sem) {
-		template.update("insert into tb_coz_set (coz_id, cs_acad_yr, cs_sem)  "
-				+ "values (?, ?, ?)", coz_id, cs_acad_yr, cs_sem);
+	public int getCourseSetMaxId() {
+		String sql = "select max(cs_id) from tb_coz_set";
+        
+		return template.query(sql, new ResultSetExtractor<Integer>() {
+			@Override
+			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+				if (rs.next()) {
+					return rs.getInt("max(cs_id)");
+				} else {
+					return 0;
+				}
+			}
+			
+		});
+	}
+	
+	@Override
+	public void addCourseSet(int cs_id, String coz_id, String cs_acad_yr, String cs_sem) {
+		template.update("insert into tb_coz_set (cs_id, coz_id, cs_acad_yr, cs_sem)  "
+				+ "values (?, ?, ?, ?)", cs_id, coz_id, cs_acad_yr, cs_sem);
 	}
 
 	@Override
@@ -148,7 +118,7 @@ public class CourseSetDaoImpl implements CourseSetDao {
 	}
 
 	@Override
-	public void updateCourseSet(int cs_id, String coz_id, int cs_acad_yr, int cs_sem) {
+	public void updateCourseSet(int cs_id, String coz_id, String cs_acad_yr, String cs_sem) {
 		template.update("update tb_coz_set set coz_id = ?, cs_acad_yr = ?, cs_sem = ?  "
 				+ "where cs_id = ?", coz_id, cs_acad_yr, cs_sem, cs_id);
 	}

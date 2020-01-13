@@ -16,7 +16,7 @@ public interface CourseContentDao {
 	
 	//添加
 	@Transactional(propagation = Propagation.REQUIRED)
-	void addCourseContent( int cont_id, int cs_id, int cont_typ, String cont_name,int cont_num, 
+	void addCourseContent(int cs_id, int cont_typ, String cont_name,int cont_num, 
 			String cont_cont, String cont_method, String cont_key, String cont_diff, 
 			double cont_hrs_tch, double cont_hrs_pr, String cont_cla_exe, String cont_hw);
 	
