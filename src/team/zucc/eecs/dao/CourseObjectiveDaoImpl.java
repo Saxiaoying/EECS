@@ -100,14 +100,13 @@ public class CourseObjectiveDaoImpl implements CourseObjectiveDao {
 	}
 
 	@Override
-	public void deleteCourseObjectiveByCo_id(int co_id) {
-		template.update("delete from tb_coz_obj where co_id = " + co_id);
+	public void deleteCourseObjective(int cs_id, int co_num) {
+		template.update("delete from tb_coz_obj where cs_id = ? and co_num = ?", cs_id, co_num);
 	}
 
 	@Override
-	public void updateCourseObjective(int co_id, int cs_id, int co_num, String co_cont) {
-		template.update("update tb_coz_obj set co_id = ?, cs_id = ?, co_num = ? "
-				+ "where co_id = ?", co_id, cs_id, co_num, co_id);
+	public void updateCourseObjective(int cs_id, int co_num, String co_cont) {
+		template.update("update tb_coz_obj set co_cont = ? where cs_id = ? and co_num = ?", co_cont, cs_id, co_num);
 	}
 
 }

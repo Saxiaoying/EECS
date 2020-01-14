@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import team.zucc.eecs.model.CourseContent;
 import team.zucc.eecs.model.CourseObjective;
+import team.zucc.eecs.service.CourseContentService;
 import team.zucc.eecs.service.CourseObjectiveService;
 
 @Controller("CourseContentController")
 public class CourseContentController {
 	@Autowired
-	private CourseObjectiveService courseObjectiveService;
+	private CourseContentService courseContentService;
 	
 	@RequestMapping(value = { "/addCourseContent" }, method = RequestMethod.POST)
 	@ResponseBody
@@ -31,34 +33,50 @@ public class CourseContentController {
 			HttpServletResponse response) {
 		System.out.println("进入CourseContentController-addCourseContent");
 		
-		List<CourseObjective> courseObjectiveList = new ArrayList<CourseObjective>();
-		//List<CourseContent> courseContentList = new ArrayList<CourseContent>();
+		List<CourseContent> courseContentList = new ArrayList<CourseContent>();
 		JSONObject obj = new JSONObject();
 		try {
 			int cs_id = in.getIntValue("cs_id");
-			
-		    JSONArray arr_obj = in.getJSONArray("arr_obj");
-		    for (Object o : arr_obj) {
+		    JSONArray arr_cont = in.getJSONArray("arr_cont");
+		    for (Object o : arr_cont) {
 		    	String s = (String) o;
 		    	String[] tmp = s.split(";");
-		    	int co_num = Integer.valueOf(tmp[0]);
-		    	String co_cont = tmp[1];
-		    	co_cont = co_cont.replaceAll("\\s", "");
-				if(co_cont.isEmpty()) {
-					obj.put("state", "存在空白项！");
-					return obj;
-				}
+		    	
+		    	int cont_typ = Integer.valueOf(tmp[0]);
+		    	String cont_name = tmp[1];
+		    	int cont_num = Integer.valueOf(tmp[2]);
+		    	String cont_cont = tmp[3];
+		    	String cont_method = tmp[4];
+		    	String cont_key = tmp[5];
+		    	String cont_diff = tmp[6];
+		    	Double cont_hrs_tch = Double.valueOf(tmp[7]);
+		    	Double cont_hrs_pr = Double.valueOf(tmp[8]);
+		    	String cont_cla_exe = tmp[9];
+		    	String cont_hw = tmp[10];
 		    	
 		    	
-		    	CourseObjective co = new CourseObjective();
-		    	co.setCs_id(cs_id);
-		    	co.setCo_num(co_num);
-		    	co.setCo_cont(co_cont);
-		    	courseObjectiveList.add(co);
+		    	CourseContent cc = new CourseContent();
+		    	cc.setCs_id(cs_id);//开课流水号（外码）
+		    	cc.setCont_typ(cont_typ); //类别（0：实验；1：授课）
+		    	cc.setCont_name(cont_name);//教学内容的名称
+		    	cc.setCont_num(cont_num);//教学内容序号
+		    	cc.setCont_cont(cont_cont);//教学主要内容
+		    	cc.setCont_method(cont_method);//教学方法与要求
+		    	cc.setCont_key(cont_key);//重点
+		    	cc.setCont_diff(cont_diff);//难点
+		    	cc.setCont_hrs_tch(cont_hrs_tch);//讲课时数
+		    	cc.setCont_hrs_pr(cont_hrs_pr);//实验时数
+		    	cc.setCont_cla_exe(cont_cla_exe);//课堂练习
+		    	cc.setCont_hw(cont_hw);//课后作业
+		    	
+		    	courseContentList.add(cc);
 		    }
-			for (CourseObjective co: courseObjectiveList) {
-				courseObjectiveService.addCourseObjective(co.getCs_id(), co.getCo_num(), co.getCo_cont());
-			}
+		    for (CourseContent cc: courseContentList) {
+		    	courseContentService.addCourseContent(cc.getCs_id(), cc.getCont_typ(), cc.getCont_name(), cc.getCont_num(), 
+		    			cc.getCont_cont(), cc.getCont_method(), cc.getCont_key(), cc.getCont_diff(), cc.getCont_hrs_tch(), 
+		    			cc.getCont_hrs_pr(), cc.getCont_cla_exe(), cc.getCont_hw());
+		    }
+			
 			obj.put("state", "OK");
 		} catch (Exception e) {
 			e.printStackTrace();

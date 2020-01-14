@@ -21,8 +21,9 @@ public interface CourseObjectiveDao {
 		
 		//删除
 		@Transactional(propagation = Propagation.REQUIRED)
-		void deleteCourseObjectiveByCo_id(int co_id);
+		void deleteCourseObjective(int cs_id, int co_num);
+		
 		//修改
 		@Transactional(propagation = Propagation.REQUIRED)
-		void updateCourseObjective(int co_id, int cs_id,  int co_num,  String co_cont);
+		void updateCourseObjective(int cs_id,  int co_num,  String co_cont);
 }
