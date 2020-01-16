@@ -66,22 +66,6 @@ public class CourseSetServiceImpl implements CourseSetService {
 	}
 
 	@Override
-	public int updateCourseSet(int cs_id, String coz_id, String cs_acad_yr, String cs_sem) {
-		try {
-			List<CourseSet> courseSetList = courseSetDao.getCourseSetListByInfFromAtoB(0, Integer.MAX_VALUE, coz_id, cs_acad_yr, cs_sem, "", "");
-			for (CourseSet cs: courseSetList) {
-				if(cs.getCoz_id().compareTo(coz_id) == 0) {
-					return 1;
-				}
-			}
-		    courseSetDao.updateCourseSet(cs_id, coz_id, cs_acad_yr, cs_sem);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
-	@Override
 	public CourseSet getCourseSetByCs_id(int cs_id) {
 		CourseSet courseSet = null;
 		try {

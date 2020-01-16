@@ -119,7 +119,7 @@ public class CourseArrangementDaoImpl implements CourseArrangementDao {
 	public List<CourseArrangement> getCourseArrangementByInfFromAtoB(int a, int b, String cs_acad_yr, String cs_sem, String coz_id,
 			String coz_name_ch, String tch_name) {
 		List<CourseArrangement> courseArrangementList = new ArrayList<>();
-		String sql = "select * from tb_coz_arg where cs_id in"
+		String sql = "select count(*) from tb_coz_arg where cs_id in"
 				+ "(select cs_id from tb_coz_set where cs_acad_yr like '%" + cs_acad_yr + "%' and cs_sem like '%" + cs_sem + "%' and coz_id like '%" + coz_id + "%' "
 				+ "and coz_id in(select coz_id from tb_coz where coz_name_ch like '%" + coz_name_ch + "%'))"
 				+ "and tch_id in"
@@ -178,7 +178,7 @@ public class CourseArrangementDaoImpl implements CourseArrangementDao {
 
 	@Override
 	public void updateCourseArrangement(int cag_id, int cs_id, int tch_id, int cag_num, String cag_name) {
-		template.update("update tb_coz_arg set cs_id = ?, tch_id = ?, cag_num = ?, cag_name = ? where cag_id = ?", 
+		template.update("update tb_coz_arg set cs_id = ?, tch_id = ?, cag_num = ?  where cag_id = ?", 
 				cs_id, tch_id, cag_num, cag_name, cag_id);
 	}
 }

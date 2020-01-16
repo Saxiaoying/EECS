@@ -22,7 +22,7 @@ public class CourseSetDaoImpl implements CourseSetDao {
 	
 	@Override
 	public CourseSet getCourseSetByCs_id(int cs_id) {
-		return template.query("select * from tb_coz_set where cs_id =" +cs_id, new ResultSetExtractor<CourseSet>() {
+		return template.query("select * from tb_coz_set where cs_id ='" +cs_id + "'", new ResultSetExtractor<CourseSet>() {
 			@Override
 			public CourseSet extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {
