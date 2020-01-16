@@ -40,6 +40,33 @@ public class CourseArrangementServiceImpl implements CourseArrangementService {
 	}
 
 	@Override
+	public CourseArrangement getCourseArrangementByCag_id(int cag_id) {
+		try {
+			CourseArrangement courseArrangement = courseArrangementDao.getCourseArrangementByCag_id(cag_id);
+			return courseArrangement;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public int updateCourseArrangement(int cag_id, int cs_id, int tch_id, int cag_num, String cag_name) {
+		try {
+			List<CourseArrangement> courseArrangementList = courseArrangementDao.getCourseArrangementByCs_idAndTch_id(cs_id, tch_id);
+			for (CourseArrangement ca: courseArrangementList) {
+				if(ca.getCag_num() == cag_num && ca.getCag_id() != cag_id) {
+					return 1;
+				}
+			}
+		    courseArrangementDao.updateCourseArrangement(cag_id, cs_id, tch_id, cag_num, cag_name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	@Override
 	public int addCourseArrangement(int cs_id, int tch_id, int cag_num, String cag_name) {
 		try {
 			List<CourseArrangement> courseArrangementList = courseArrangementDao.getCourseArrangementByCs_idAndTch_id(cs_id, tch_id);
@@ -56,7 +83,7 @@ public class CourseArrangementServiceImpl implements CourseArrangementService {
 	}
 
 	@Override
-	public int delCourseArrangement(int cag_id) {
+	public int deleteCourseArrangement(int cag_id) {
 		try {
 		    courseArrangementDao.deleteCourseArrangementByCag_id(cag_id);
 		} catch (Exception e) {
