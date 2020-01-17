@@ -23,7 +23,10 @@
 </head>
 
 <script type="text/javascript" src="../js/jquery.min.js"></script>
+
 <script type="text/javascript"> 
+     var courseSet;
+     var course;
 	 function addCourseArrangement() {
 	 	$.ajax({
 			url: '/EECS/ajax/addCourseArrangement',
@@ -45,7 +48,42 @@
 			}
 		});
 	}
-	 
+	function getCourseSet() {
+	 	$.ajax({
+			url: '/EECS/ajax/getCourseSet',
+			type: 'POST',
+			data: JSON.stringify({
+				cs_id:$("#cs_id").val()
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if (data.state == 'OK') {
+					courseSet = data.courseSet;
+					course = data.course;
+					var cs_id = courseSet.cs_id;
+					var coz_id = courseSet.coz_id;
+					var cs_acad_yr = courseSet.cs_acad_yr;
+					var cs_sem = courseSet.cs_sem;
+					var coz_name_ch = course.coz_name_ch;
+					
+					var inf = "*****开课信息*****\n" + 
+						      "开课流水号：" + cs_id + "\n" + 
+					          "课程号：" + coz_id + "\n" + 
+					          "课程名称：" + coz_name_ch + "\n" + 
+					          "学年：" + cs_acad_yr + "\n" + 
+					          "学期：" + cs_sem + "\n";
+					alert(inf);
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
     
 </script>
 
@@ -58,9 +96,13 @@
 				<div class="layui-input-inline">
 					<input type="text" id="cs_id" class="layui-input" >
 				</div>
+				
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label"> </label>
+				<button class="layui-btn layui-btn-warm" lay-filter="add" lay-submit="" type="button" onclick="getCourseSet()">查看</button>
 			</div>
 			
-		
 			<div class="layui-form-item">
 				<label class="layui-form-label"> <span class="x-red">*</span>教师编号
 				</label>

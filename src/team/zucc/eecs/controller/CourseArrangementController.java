@@ -246,7 +246,6 @@ public class CourseArrangementController {
 	}
 	
 	
-	
 	@RequestMapping(value = { "/deleteCourseArrangementList" }, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject deleteCourseArrangementList(@RequestBody JSONObject in, HttpServletRequest request,

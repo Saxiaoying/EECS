@@ -177,10 +177,21 @@ public class CourseSetController {
 		
 		JSONObject obj = new JSONObject();
 		try {
-			
-			int cs_id = in.getIntValue("cs_id");
+			int cs_id = 0;
+			try {
+				cs_id = in.getIntValue("cs_id");
+			} catch (Exception e) {
+				obj.put("state", "开课流水号必须是正整数！");
+				return obj;
+			}
 			CourseSet courseSet = courseSetService.getCourseSetByCs_id(cs_id);
+			if(courseSet == null) {
+				obj.put("state", "暂无该开课信息！");
+				return obj;
+			}
+			Course course = courseService.getCourseByCoz_id(courseSet.getCoz_id());
 			obj.put("courseSet", courseSet);
+			obj.put("course", course);
 			obj.put("state", "OK");
 		} catch (Exception e) {
 			e.printStackTrace();
