@@ -30,7 +30,6 @@ public class CourseContentDaoImpl implements CourseContentDao {
 				CourseContent cc = new CourseContent();
 				cc.setCont_id(rs.getInt("cont_id"));
 				cc.setCs_id(rs.getInt("cs_id"));
-				cc.setCont_typ(rs.getInt("cont_typ"));
 				cc.setCont_name(rs.getString("cont_name"));
 				cc.setCont_num(rs.getInt("cont_num"));
 				cc.setCont_cont(rs.getString("cont_cont"));
@@ -56,7 +55,6 @@ public class CourseContentDaoImpl implements CourseContentDao {
 					CourseContent cc = new CourseContent();
 					cc.setCont_id(rs.getInt("cont_id"));
 					cc.setCs_id(rs.getInt("cs_id"));
-					cc.setCont_typ(rs.getInt("cont_typ"));
 					cc.setCont_name(rs.getString("cont_name"));
 					cc.setCont_num(rs.getInt("cont_num"));
 					cc.setCont_cont(rs.getString("cont_cont"));
@@ -85,7 +83,6 @@ public class CourseContentDaoImpl implements CourseContentDao {
 				CourseContent cc = new CourseContent();
 				cc.setCont_id(rs.getInt("cont_id"));
 				cc.setCs_id(rs.getInt("cs_id"));
-				cc.setCont_typ(rs.getInt("cont_typ"));
 				cc.setCont_name(rs.getString("cont_name"));
 				cc.setCont_num(rs.getInt("cont_num"));
 				cc.setCont_cont(rs.getString("cont_cont"));
@@ -111,7 +108,6 @@ public class CourseContentDaoImpl implements CourseContentDao {
 					CourseContent cc = new CourseContent();
 					cc.setCont_id(rs.getInt("cont_id"));
 					cc.setCs_id(rs.getInt("cs_id"));
-					cc.setCont_typ(rs.getInt("cont_typ"));
 					cc.setCont_name(rs.getString("cont_name"));
 					cc.setCont_num(rs.getInt("cont_num"));
 					cc.setCont_cont(rs.getString("cont_cont"));
@@ -132,29 +128,29 @@ public class CourseContentDaoImpl implements CourseContentDao {
 	}
 	
 	@Override
-	public void addCourseContent(int cs_id, int cont_typ, String cont_name, int cont_num, String cont_cont,
+	public void addCourseContent(int cs_id, String cont_name, int cont_num, String cont_cont,
 			String cont_method, String cont_key, String cont_diff, double cont_hrs_tch, double cont_hrs_pr,
 			String cont_cla_exe, String cont_hw) {
-		template.update("insert into tb_cont (cs_id, cont_typ, cont_name, cont_num, cont_cont, cont_method, "
+		template.update("insert into tb_cont (cs_id, cont_name, cont_num, cont_cont, cont_method, "
 				+ "cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw)  "
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", cs_id, cont_typ, cont_name, cont_num, cont_cont,
+				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", cs_id, cont_name, cont_num, cont_cont,
 				cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw);
 	}
 
 	@Override
-	public void deleteCourseContentByCoz_id(int cs_id, int cont_num) {
+	public void deleteCourseContentByCs_idAndCont_num(int cs_id, int cont_num) {
 		template.update("delete from tb_cont where cs_id ="  + cs_id + " and cont_num = " + cont_num);
 
 	}
 
 	@Override
-	public void updateCourseContent(int cs_id, int cont_typ, String cont_name, int cont_num,
+	public void updateCourseContent(int cs_id, String cont_name, int cont_num,
 			String cont_cont, String cont_method, String cont_key, String cont_diff, double cont_hrs_tch,
 			double cont_hrs_pr, String cont_cla_exe, String cont_hw) {
-		template.update("update tb_cont set cont_typ = ?, cont_name = ?, cont_cont = ?, cont_method = ?, cont_key = ?, "
+		template.update("update tb_cont set cont_name = ?, cont_cont = ?, cont_method = ?, cont_key = ?, "
 				+ "cont_diff = ?, cont_hrs_tch = ?, cont_hrs_pr = ?, cont_cla_exe = ?, cont_hw = ? "
 				+ "where cs_id = ? and cont_num = ?", 
-			    cont_typ, cont_name, cont_cont, cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, 
+			    cont_name, cont_cont, cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, 
 				cont_hw, cs_id, cont_num);
 	}
 

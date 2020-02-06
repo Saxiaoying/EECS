@@ -14,36 +14,33 @@ public class CourseContent {
 	private int cs_id;//开课流水号（外码）
 	
 	@JSONField(ordinal = 3)
-	private int cont_typ;//类别（0：实验；1：授课）
-	
-	@JSONField(ordinal = 4)
 	private String cont_name;//教学内容的名称
 	
-	@JSONField(ordinal = 5)
+	@JSONField(ordinal = 4)
 	private int cont_num;//教学内容序号
 	
-	@JSONField(ordinal = 6)
+	@JSONField(ordinal = 5)
 	private String cont_cont;//教学主要内容
 	
-	@JSONField(ordinal = 7)
+	@JSONField(ordinal = 6)
 	private String cont_method;//教学方法与要求
 	
-	@JSONField(ordinal = 8)
+	@JSONField(ordinal = 7)
 	private String cont_key;//重点
 	
-	@JSONField(ordinal = 9)
+	@JSONField(ordinal = 8)
 	private String cont_diff;//难点
 	
-	@JSONField(ordinal = 10)
+	@JSONField(ordinal = 9)
 	private double cont_hrs_tch;//讲课时数
 	
-	@JSONField(ordinal = 11)
+	@JSONField(ordinal = 10)
 	private double cont_hrs_pr;//实验时数
 	
-	@JSONField(ordinal = 12)
+	@JSONField(ordinal = 11)
 	private String cont_cla_exe;//课堂练习
 	
-	@JSONField(ordinal = 13)
+	@JSONField(ordinal = 12)
 	private String cont_hw;//课后作业
 	
 	public int getCont_id() {
@@ -60,14 +57,6 @@ public class CourseContent {
 
 	public void setCs_id(int cs_id) {
 		this.cs_id = cs_id;
-	}
-
-	public int getCont_typ() {
-		return cont_typ;
-	}
-
-	public void setCont_typ(int cont_typ) {
-		this.cont_typ = cont_typ;
 	}
 
 	public String getCont_name() {
@@ -155,7 +144,6 @@ public class CourseContent {
 		
 		j.put("cont_id", cont_id);
 		j.put("cs_id", cs_id);
-		j.put("cont_typ", cont_typ);
 		j.put("cont_name", cont_name);
 		j.put("cont_num", cont_num);
 		

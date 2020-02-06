@@ -16,13 +16,13 @@ public class CourseContentServiceImpl implements CourseContentService {
 	private  CourseContentDao courseContentDao;
 	
 	@Override
-	public int updateCourseContent(int cs_id, int cont_typ, String cont_name, int cont_num, String cont_cont,
+	public int updateCourseContent(int cs_id, String cont_name, int cont_num, String cont_cont,
 			String cont_method, String cont_key, String cont_diff, double cont_hrs_tch, double cont_hrs_pr,
 			String cont_cla_exe, String cont_hw) {
 		try {
 			CourseContent courseContent = courseContentDao.getCourseContentByCs_idAndCont_num(cs_id, cont_num);
-			if(courseContent == null) courseContentDao.addCourseContent(cs_id, cont_typ, cont_name, cont_num, cont_cont, cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw);
-			else courseContentDao.updateCourseContent(cs_id, cont_typ, cont_name, cont_num, cont_cont, cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw);
+			if(courseContent == null) courseContentDao.addCourseContent(cs_id, cont_name, cont_num, cont_cont, cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw);
+			else courseContentDao.updateCourseContent(cs_id, cont_name, cont_num, cont_cont, cont_method, cont_key, cont_diff, cont_hrs_tch, cont_hrs_pr, cont_cla_exe, cont_hw);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +43,7 @@ public class CourseContentServiceImpl implements CourseContentService {
 	@Override
 	public int deleteCourseContent(int cs_id, int cont_num) {
 		try {
-			courseContentDao.deleteCourseContentByCoz_id(cs_id, cont_num);
+			courseContentDao.deleteCourseContentByCs_idAndCont_num(cs_id, cont_num);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

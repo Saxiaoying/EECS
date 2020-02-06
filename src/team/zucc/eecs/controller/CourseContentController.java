@@ -50,7 +50,6 @@ public class CourseContentController {
 		    JSONArray cont_hwL = in.getJSONArray("cont_hw");
 		    for (int i = 1; i <= num; i++) {
 		    	
-		    	int cont_typ = 0;
 		    	String cont_name = cont_nameL.getString(i);
 		    	int cont_num = i;
 		    	String cont_cont = cont_contL.getString(i);
@@ -77,7 +76,6 @@ public class CourseContentController {
 		    	
 		    	CourseContent cc = new CourseContent();
 		    	cc.setCs_id(cs_id);//开课流水号（外码）
-		    	cc.setCont_typ(cont_typ); //类别（0：实验；1：授课）
 		    	cc.setCont_name(cont_name);//教学内容的名称
 		    	cc.setCont_num(cont_num);//教学内容序号
 		    	cc.setCont_cont(cont_cont);//教学主要内容
@@ -92,17 +90,15 @@ public class CourseContentController {
 		    	courseContentList.add(cc);
 		    }
 		    for (CourseContent cc: courseContentList) {
-		    	courseContentService.updateCourseContent(cc.getCs_id(), cc.getCont_typ(), cc.getCont_name(), cc.getCont_num(), 
+		    	courseContentService.updateCourseContent(cc.getCs_id(), cc.getCont_name(), cc.getCont_num(), 
 		    			cc.getCont_cont(), cc.getCont_method(), cc.getCont_key(), cc.getCont_diff(), cc.getCont_hrs_tch(), 
 		    			cc.getCont_hrs_pr(), cc.getCont_cla_exe(), cc.getCont_hw());
 		    }
 		    
 		    courseContentList2 = courseContentService.getCourseContentListByCs_id(cs_id);
 		    for (int i = courseContentList.size(); i < courseContentList2.size(); i++) {
-		    	System.out.println(i);
 				CourseContent cc = courseContentList2.get(i);
 				courseContentService.deleteCourseContent(cs_id, cc.getCont_num());
-				System.out.println(cs_id + " + "  + cc.getCont_num());
 			}
 			
 			obj.put("state", "OK");
