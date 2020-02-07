@@ -104,6 +104,8 @@ public class CoursePracticeController {
 				coursePracticeList = new ArrayList<CoursePractice>();
 			}
 			JSONArray arr = new JSONArray();
+			CoursePractice tmp = new CoursePractice();
+			arr.add(tmp);
 			arr.addAll(coursePracticeList);
 			
 			obj.put("total", coursePracticeList.size());

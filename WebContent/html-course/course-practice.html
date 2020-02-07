@@ -38,15 +38,17 @@
 			pra_name[i] = document.getElementById("pra_name" + i).value;
 			pra_hrs[i] = document.getElementById("pra_hrs" + i).value;
 			pra_cont[i] = document.getElementById("pra_cont" + i).value;
-			pra_nature[i] = document.getElementById("pra_nature" + i).value;
-			pra_typ[i] = document.getElementById("pra_typ" + i).value;
+			//pra_nature[i] = document.getElementById("pra_nature" + i).value;
+			//pra_typ[i] = document.getElementById("pra_typ" + i).value;
+			pra_nature[i] = $("input[name='pn" + i + "']:checked").val();
+			pra_typ[i] = $("input[name='pt" + i + "']:checked").val();
 		}
 	}
 	
 	function show_data() {
 		var html = "";
-    	for(i = 1; i <= num; i++) {
-    		html = html +
+    	for(i = 1; i <= 100; i++) {
+    		html = html + '<div display="" id="ttt' + i+'">' +
     		'<div class="layui-card-header">序号：' + i +'</div>' + 
 				'<div class="layui-card-body">' + 
 				
@@ -71,24 +73,41 @@
 							'<input type="text" lay-verify="required"  autocomplete="off" class="layui-input" id="pra_cont' + i+ '">' + 
 						'</div>' + 
 					'</div>' + 
-					'<div class="layui-row layui-col-space10 layui-form-item">' + 
-						'<div class="layui-col-lg6">' + 
-							'<label class="layui-form-label">实验性质：</label>' + 
-							'<div class="layui-input-block">' + 
-								'<input type="text"lay-verify="required"  autocomplete="off" class="layui-input"  id="pra_nature' + i+ '">' + 
-							'</div>' + 
-						'</div>' + 
-						'<div class="layui-col-lg6">' + 
-							'<label class="layui-form-label">类别：</label>' + 
-							'<div class="layui-input-block">' + 
-								'<input type="text"lay-verify="required"  autocomplete="off" class="layui-input"  id="pra_typ' + i+ '">' + 
-							'</div>' + 
+					
+					
+					'<div class="layui-form-item">' + 
+						'<label class="layui-form-label">实验性质：</label>' + 
+						'<div class="layui-input-block">' + 
+							' 验证 <input type="radio" value="验证" name="pn' + i + '" id="pn_item' + i + '1" checked="checked"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>验证</div></div> ' + 
+							' 设计 <input type="radio" value="设计" name="pn' + i + '" id="pn_item' + i + '2"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>设计</div></div> ' + 
+							' 综合 <input type="radio" value="综合" name="pn' + i + '" id="pn_item' + i + '3"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>综合</div></div> ' +
+							' 演示 <input type="radio" value="演示" name="pn' + i + '" id="pn_item' + i + '4"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>演示</div></div> ' +
 						'</div>' + 
 					'</div>' + 
 					
+					'<div class="layui-form-item">' + 
+						'<label class="layui-form-label">类别：</label>' + 
+						'<div class="layui-input-block">' + 
+							' 必选 <input type="radio" value="必选" name="pt' + i + '" id="pt_item' + i + '1" checked="checked"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>必选</div></div> ' + 
+							' 选做 <input type="radio" value="选做" name="pt' + i + '" id="pt_item' + i + '2"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>选做</div></div> ' + 
+						'</div>' + 
+					'</div>' + 
+					/* '<div class="layui-form-item">' + 
+						'<label class="layui-form-label">实验性质：</label>' + 
+						'<div class="layui-input-inline">' + 
+							'<select id="coz_nature">' + 
+								'<option value="验证">验证</option>' + 
+								'<option value="设计">设计</option>' + 
+								'<option value="综合">综合</option>' + 
+								'<option value="演示">演示</option>' + 
+							'</select>' + 
+						'</div>' + 
+					'</div>' +  */
+					
 					
 				'</div>' + 
-			'</div>';
+			'</div>' + 
+		'</div>';
     		
 		}
     	document.getElementById("table_cont").innerHTML = html;
@@ -96,9 +115,39 @@
 		    document.getElementById("pra_name" + i).value = pra_name[i];
 			document.getElementById("pra_hrs" + i).value = pra_hrs[i];
 			document.getElementById("pra_cont" + i).value = pra_cont[i];
-			document.getElementById("pra_nature" + i).value = pra_nature[i];
-			document.getElementById("pra_typ" + i).value = pra_typ[i];
+			if(pra_nature[i] == '验证') {
+				$("#pn_item" + i + "4").removeAttr("checked");
+				$("#pn_item" + i + "2").removeAttr("checked");
+				$("#pn_item" + i + "3").removeAttr("checked");
+			    $("#pn_item" + i + "1").attr("checked","checked");  
+			}else if(pra_nature[i] == '设计') {
+				$("#pn_item" + i + "1").removeAttr("checked");
+				$("#pn_item" + i + "4").removeAttr("checked");
+				$("#pn_item" + i + "3").removeAttr("checked");
+			    $("#pn_item" + i + "2").attr("checked","checked");  
+			}else if(pra_nature[i] == '综合') {
+				$("#pn_item" + i + "1").removeAttr("checked");
+				$("#pn_item" + i + "2").removeAttr("checked");
+				$("#pn_item" + i + "4").removeAttr("checked");
+			    $("#pn_item" + i + "3").attr("checked","checked");  
+			}else if(pra_nature[i] == '演示') {
+				$("#pn_item" + i + "1").removeAttr("checked");
+				$("#pn_item" + i + "2").removeAttr("checked");
+				$("#pn_item" + i + "3").removeAttr("checked");
+			    $("#pn_item" + i + "4").attr("checked","checked");  
+			}
+			
+			if(pra_typ[i] == '必做') {
+				$("#pt_item" + i + "2").removeAttr("checked");
+			    $("#pt_item" + i + "1").attr("checked","checked");  
+			}else if(pra_typ[i] == '选做') {
+				$("#pt_item" + i + "1").removeAttr("checked");
+			    $("#pt_item" + i + "2").attr("checked","checked");  
+			}
 		}
+		for(i = num + 1; i <= 100; i++) {
+    		document.getElementById("ttt" + i).style.display="none";//隐藏
+    	}
 	}
 	
 	function addPra() {
@@ -109,12 +158,19 @@
 		pra_cont[num] = "";
 		pra_nature[num] = "";
 		pra_typ[num] = "";
-		show_data();
+		//show_data();
+		document.getElementById("ttt" + num).style.display="";//隐藏
+		document.getElementById("pra_name" + num).value = pra_name[num];
+		document.getElementById("pra_hrs" + num).value = pra_hrs[num];
+		document.getElementById("pra_cont" + num).value = pra_cont[num];
+		document.getElementById("pra_nature" + num).value = pra_nature[num];
+		document.getElementById("pra_typ" + num).value = pra_typ[num];
 	}
 	function delPra() {
+		document.getElementById("ttt" + num).style.display="none";//隐藏
 		num = num - 1;
-		save_data();
-		show_data();
+		//save_data();
+		//show_data();
 	}
 	function getInf() {  
 	   var url = location.search; //获取url中"?"符后的字串  
@@ -172,12 +228,12 @@
 				}
 				else {
 					num = data.total;
-					for(i = 0; i < num; i++) {
-						pra_name[i+1] = data.coursePracticeList[i].pra_name;
-						pra_hrs[i+1] = data.coursePracticeList[i].pra_hrs;
-						pra_cont[i+1] = data.coursePracticeList[i].pra_cont;
-						pra_nature[i+1] = data.coursePracticeList[i].pra_nature;
-						pra_typ[i+1] = data.coursePracticeList[i].pra_typ;
+					for(i = 1; i <= num; i++) {
+						pra_name[i] = data.coursePracticeList[i].pra_name;
+						pra_hrs[i] = data.coursePracticeList[i].pra_hrs;
+						pra_cont[i] = data.coursePracticeList[i].pra_cont;
+						pra_nature[i] = data.coursePracticeList[i].pra_nature;
+						pra_typ[i] = data.coursePracticeList[i].pra_typ;
 					}
 				}
 			},
@@ -187,6 +243,8 @@
 		});
 	}
     $(function(){
+    	/* $("body").delegate('input[type="radio"]', "click", function(){}); 
+    	$('body').delegate($('input:radio[name="np1"]'),'click',function() {});*/
     	getCoursePracticeList();
     	show_data();
 	})

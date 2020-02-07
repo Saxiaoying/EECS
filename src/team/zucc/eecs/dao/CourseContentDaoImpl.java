@@ -77,7 +77,7 @@ public class CourseContentDaoImpl implements CourseContentDao {
 	@Override
 	public List<CourseContent> getCourseContentByCs_id(int cs_id) {
 		List<CourseContent> courseContentList = new ArrayList<>();
-		String sql = "select * from tb_cont";
+		String sql = "select * from tb_cont where cs_id =" + cs_id + " ORDER BY cont_num";
 		courseContentList = this.template.query(sql, new RowMapper<CourseContent>() {
 			public CourseContent mapRow(ResultSet rs, int rowNum) throws SQLException {
 				CourseContent cc = new CourseContent();

@@ -69,7 +69,7 @@ public class CoursePracticeDaoImpl implements CoursePracticeDao {
 	@Override
 	public List<CoursePractice> getCoursePracticeByCs_id(int cs_id) {
 		List<CoursePractice> coursePracticeList = new ArrayList<>();
-		String sql = "select * from tb_pra";
+		String sql = "select * from tb_pra where cs_id =" + cs_id + " ORDER BY pra_num" ;
 		coursePracticeList = this.template.query(sql, new RowMapper<CoursePractice>() {
 			public CoursePractice mapRow(ResultSet rs, int rowNum) throws SQLException {
 				CoursePractice cp = new CoursePractice();

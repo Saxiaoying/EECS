@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import team.zucc.eecs.model.CourseContent;
 import team.zucc.eecs.model.CourseObjective;
+import team.zucc.eecs.model.CoursePractice;
 import team.zucc.eecs.service.CourseContentService;
 import team.zucc.eecs.service.CourseObjectiveService;
 
@@ -125,6 +126,8 @@ public class CourseContentController {
 				courseContentList = new ArrayList<CourseContent>();
 			}
 			JSONArray arr = new JSONArray();
+			CoursePractice tmp = new CoursePractice();
+			arr.add(tmp);
 			arr.addAll(courseContentList);
 			
 			obj.put("total", courseContentList.size());

@@ -213,15 +213,15 @@
 				}
 				else {
 					num = data.total;
-					for(i = 0; i < num; i++) {
-						cont_name[i+1] = data.courseContentList[i].cont_name;
-						cont_cont[i+1] = data.courseContentList[i].cont_cont;
-						cont_method[i+1] = data.courseContentList[i].cont_method;
-						cont_key[i+1] = data.courseContentList[i].cont_key;
-						cont_diff[i+1] = data.courseContentList[i].cont_diff;
-						cont_hrs_tch[i+1] = data.courseContentList[i].cont_hrs_tch;
-						cont_hrs_pr[i+1] = data.courseContentList[i].cont_hrs_pr;
-						cont_cla_exe[i+1] = data.courseContentList[i].cont_cla_exe;
+					for(i = 1; i <= num; i++) {
+						cont_name[i] = data.courseContentList[i].cont_name;
+						cont_cont[i] = data.courseContentList[i].cont_cont;
+						cont_method[i] = data.courseContentList[i].cont_method;
+						cont_key[i] = data.courseContentList[i].cont_key;
+						cont_diff[i] = data.courseContentList[i].cont_diff;
+						cont_hrs_tch[i] = data.courseContentList[i].cont_hrs_tch;
+						cont_hrs_pr[i] = data.courseContentList[i].cont_hrs_pr;
+						cont_cla_exe[i] = data.courseContentList[i].cont_cla_exe;
 						cont_hw[i+1] = data.courseContentList[i].cont_hw;
 					}
 				}
