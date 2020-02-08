@@ -59,7 +59,7 @@ public class CourseObjectiveDaoImpl implements CourseObjectiveDao {
 	@Override
 	public List<CourseObjective> getCourseObjectiveByCs_id(int cs_id) {
 		List<CourseObjective> courseObjectiveList = new ArrayList<>();
-		String sql = "select * from tb_coz_obj where cs_id = " + cs_id;
+		String sql = "select * from tb_coz_obj where cs_id = " + cs_id + " order by co_num";
 		courseObjectiveList = this.template.query(sql, new RowMapper<CourseObjective>() {
 			public CourseObjective mapRow(ResultSet rs, int rowNum) throws SQLException {
 				CourseObjective co = new CourseObjective();

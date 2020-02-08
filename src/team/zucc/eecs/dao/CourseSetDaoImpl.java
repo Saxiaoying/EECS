@@ -39,6 +39,26 @@ public class CourseSetDaoImpl implements CourseSetDao {
 			
 		});
 	}
+	@Override
+	public CourseSet getCourseSetByCoz_idAndTime(String coz_id, String cs_acad_yr, String cs_sem) {
+		return template.query("select * from tb_coz_set where coz_id = '" +coz_id +
+				"' and cs_acad_yr = '" + cs_acad_yr + "' and cs_sem = '" +  cs_sem +"'", new ResultSetExtractor<CourseSet>() {
+			@Override
+			public CourseSet extractData(ResultSet rs) throws SQLException, DataAccessException {
+				if (rs.next()) {
+					CourseSet cs = new CourseSet();
+					cs.setCs_id(rs.getInt("cs_id"));
+					cs.setCoz_id(rs.getString("coz_id"));
+					cs.setCs_acad_yr(rs.getString("cs_acad_yr"));
+					cs.setCs_sem(rs.getString("cs_sem"));
+					return cs;
+				} else {
+					return null;
+				}
+			}
+			
+		});
+	}
 	
 	@Override
 	public int getCourseSetNumberByInf(String coz_id, String cs_acad_yr, String cs_sem, String coz_name_ch, String coz_nature) {

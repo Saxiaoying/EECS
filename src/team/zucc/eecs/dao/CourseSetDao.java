@@ -11,6 +11,7 @@ import team.zucc.eecs.model.CourseSet;
 public interface CourseSetDao {
 		//查询
 	    CourseSet getCourseSetByCs_id(int cs_id);
+	    CourseSet getCourseSetByCoz_idAndTime(String coz_id, String cs_acad_yr, String cs_sem);
 	    
 		//"" "" ""可以查询全部
 		int getCourseSetNumberByInf(String coz_id, String cs_acad_yr, String cs_sem, String coz_name_ch, String coz_nature);

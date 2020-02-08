@@ -92,4 +92,15 @@ public class CourseSetServiceImpl implements CourseSetService {
 		return courseSet;
 	}
 
+	@Override
+	public CourseSet getCourseSetByCoz_idAndTime(String coz_id, String cs_acad_yr, String cs_sem) {
+		CourseSet courseSet = null;
+		try {
+		    courseSet = courseSetDao.getCourseSetByCoz_idAndTime(coz_id, cs_acad_yr, cs_sem);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return courseSet;
+	}
+
 }
