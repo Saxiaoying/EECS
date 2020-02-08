@@ -6,6 +6,7 @@ import java.util.List;
 import team.zucc.eecs.model.Course;
 
 public interface CourseService {
+	int getCourseNumber();
 	Course getCourseByCoz_id(String coz_id);
 	List<Course> getCourseListFromAtoB(int a, int b);
 	List<Course> getCourseListByInf(String coz_id, String coz_name_ch, String coz_nature);

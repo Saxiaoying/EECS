@@ -41,7 +41,7 @@ public class CourseController {
 			JSONArray arr = new JSONArray();
 			arr.addAll(courseList);
 			
-			obj.put("total", courseList.size());
+			obj.put("total", courseService.getCourseNumber());
 			obj.put("courseList", arr);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,6 +71,12 @@ public class CourseController {
 			coz_nature = coz_nature.replaceAll("\\s", "");
 			if(coz_nature.isEmpty()) coz_nature = null;
 			
+			if(coz_id == null && coz_name_ch == null && coz_nature == null) {
+				obj.put("state", "NULL");
+				obj.put("total", 0);
+				obj.put("courseList", new JSONArray());
+				return obj;
+			}
 			courseList = courseService.getCourseListByInf(coz_id, coz_name_ch, coz_nature);
 			
 			JSONArray arr = new JSONArray();
@@ -78,6 +84,12 @@ public class CourseController {
 			
 			obj.put("total", courseList.size());
 			obj.put("courseList", arr);
+			
+			if(courseList.size() == 0) {
+				obj.put("state", "EMPTY");
+				return obj;
+			}
+			obj.put("state", "OK");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,11 +105,11 @@ public class CourseController {
 		JSONObject obj = new JSONObject();
 		try {
 			String coz_id = in.getString("coz_id");
-			coz_id = coz_id.trim();
+			coz_id = coz_id.replaceAll("\\s", "");
 			if(coz_id.isEmpty()) coz_id = null;
 			
 			String coz_name_ch = in.getString("coz_name_ch");
-			coz_name_ch = coz_name_ch.trim();
+			coz_name_ch = coz_name_ch.replaceAll("\\s", "");
 			if(coz_name_ch.isEmpty()) coz_name_ch = null;
 			
 			String coz_name_eng = in.getString("coz_name_eng");
@@ -105,19 +117,19 @@ public class CourseController {
 			if(coz_name_eng.isEmpty()) coz_name_eng = null;
 			
 			String coz_nature = in.getString("coz_nature");
-			coz_nature = coz_nature.trim();
+			coz_nature = coz_nature.replaceAll("\\s", "");
 			if(coz_nature.isEmpty()) coz_nature = null;
 			
 			String tmp_coz_credit = in.getString("coz_credit");
-			tmp_coz_credit = tmp_coz_credit.trim();
+			tmp_coz_credit = tmp_coz_credit.replaceAll("\\s", "");
 			if(tmp_coz_credit.isEmpty()) tmp_coz_credit = null;
 			
 			String coz_hrs_wk = in.getString("coz_hrs_wk");
-			coz_hrs_wk = coz_hrs_wk.trim();
+			coz_hrs_wk = coz_hrs_wk.replaceAll("\\s", "");
 			if(coz_hrs_wk.isEmpty()) coz_hrs_wk = null;
 			
 			String tmp_coz_hours = in.getString("coz_hours");
-			tmp_coz_hours = tmp_coz_hours.trim();
+			tmp_coz_hours = tmp_coz_hours.replaceAll("\\s", "");
 			if(tmp_coz_hours.isEmpty()) tmp_coz_hours = null;
 			
 			
