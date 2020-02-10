@@ -13,7 +13,7 @@ public class Evaluation {
 	private int eval_id;
 	
 	@JSONField(ordinal = 2)
-	private String co_id; //课程目标ID（外码）
+	private int co_id; //课程目标ID（外码）
 
 	@JSONField(ordinal = 3)
 	private int cs_id; //开课流水号（外码）
@@ -28,11 +28,13 @@ public class Evaluation {
 	private double eval_points; //设定的分数（总分）
 	
 	@JSONField(ordinal = 7)
-	private double eval_score; //得分
+	private double eval_score; //评价得分
 	
 	@JSONField(ordinal = 8)
 	private double eval_sc_rt; //得分率
 	
+	@JSONField(ordinal = 9)
+	private double eval_achv; //达成度
 	
 	public int getEval_id() {
 		return eval_id;
@@ -44,12 +46,12 @@ public class Evaluation {
 	}
 
 
-	public String getCo_id() {
+	public int getCo_id() {
 		return co_id;
 	}
 
 
-	public void setCo_id(String co_id) {
+	public void setCo_id(int co_id) {
 		this.co_id = co_id;
 	}
 
@@ -112,7 +114,15 @@ public class Evaluation {
 	public void setEval_sc_rt(double eval_sc_rt) {
 		this.eval_sc_rt = eval_sc_rt;
 	}
+	
+	public double getEval_achv() {
+		return eval_achv;
+	}
 
+
+	public void setEval_achv(double eval_achv) {
+		this.eval_achv = eval_achv;
+	}
 
 	public JSONObject toJson() {
 		JSONObject j = new JSONObject();
@@ -125,7 +135,7 @@ public class Evaluation {
 		j.put("eval_points", eval_points);
 		j.put("eval_score", eval_score);
 		j.put("eval_sc_rt", eval_sc_rt);
-		
+		j.put("eval_achv", eval_achv);
 		return j;
 	}
 }

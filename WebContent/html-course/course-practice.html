@@ -78,18 +78,18 @@
 					'<div class="layui-form-item">' + 
 						'<label class="layui-form-label">实验性质：</label>' + 
 						'<div class="layui-input-block">' + 
-							' 验证 <input type="radio" value="验证" name="pn' + i + '" id="pn_item' + i + '1" checked="checked"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>验证</div></div> ' + 
-							' 设计 <input type="radio" value="设计" name="pn' + i + '" id="pn_item' + i + '2"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>设计</div></div> ' + 
-							' 综合 <input type="radio" value="综合" name="pn' + i + '" id="pn_item' + i + '3"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>综合</div></div> ' +
-							' 演示 <input type="radio" value="演示" name="pn' + i + '" id="pn_item' + i + '4"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>演示</div></div> ' +
+							'<input type="radio" title="验证" value="验证" name="pn' + i + '" id="pn_item' + i + '1" checked="checked"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>验证</div></div> ' + 
+							'<input type="radio" title="设计" value="设计" name="pn' + i + '" id="pn_item' + i + '2"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>设计</div></div> ' + 
+							'<input type="radio" title="综合" value="综合" name="pn' + i + '" id="pn_item' + i + '3"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>综合</div></div> ' +
+							'<input type="radio" title="演示" value="演示" name="pn' + i + '" id="pn_item' + i + '4"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>演示</div></div> ' +
 						'</div>' + 
 					'</div>' + 
 					
 					'<div class="layui-form-item">' + 
 						'<label class="layui-form-label">类别：</label>' + 
 						'<div class="layui-input-block">' + 
-							' 必选 <input type="radio" value="必选" name="pt' + i + '" id="pt_item' + i + '1" checked="checked"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>必选</div></div> ' + 
-							' 选做 <input type="radio" value="选做" name="pt' + i + '" id="pt_item' + i + '2"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>选做</div></div> ' + 
+							'<input type="radio" title="必选" value="必选" name="pt' + i + '" id="pt_item' + i + '1" checked="checked"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>必选</div></div> ' + 
+							'<input type="radio" title="选做" value="选做" name="pt' + i + '" id="pt_item' + i + '2"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>选做</div></div> ' + 
 						'</div>' + 
 					'</div>' + 
 					/* '<div class="layui-form-item">' + 
@@ -159,7 +159,7 @@
 		pra_nature[num] = "";
 		pra_typ[num] = "";
 		//show_data();
-		document.getElementById("ttt" + num).style.display="";//隐藏
+		document.getElementById("ttt" + num).style.display="";//显示
 		document.getElementById("pra_name" + num).value = pra_name[num];
 		document.getElementById("pra_hrs" + num).value = pra_hrs[num];
 		document.getElementById("pra_cont" + num).value = pra_cont[num];
