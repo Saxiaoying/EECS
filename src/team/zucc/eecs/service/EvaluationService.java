@@ -16,4 +16,6 @@ public interface EvaluationService {
 		
 		int updateEvaluationByEval_id(int eval_id, int co_id, int cs_id, int et_id, double eval_prop, double eval_points, double eval_score, double eval_sc_rt, double eval_achv);
 
+		//根据细化项得出总的分数
+		int updateEvaluationByCs_idAndCo_idAndEt_id(int co_id, int cs_id, int et_id); 
 }

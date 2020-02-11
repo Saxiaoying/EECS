@@ -13,27 +13,24 @@ public class EvaluationDetail {
 	private int ed_id; // ID
 	
 	@JSONField(ordinal = 2)
-	private int co_id; //课程目标ID（外码）
-	
-	@JSONField(ordinal = 3)
 	private int cont_id; //教学内容ID（外码）
 	
-	@JSONField(ordinal = 4)
+	@JSONField(ordinal = 3)
 	private int cs_id; //开课流水号（外码）
 	
-	@JSONField(ordinal = 5)
+	@JSONField(ordinal = 4)
 	private int et_id; //类型表ID （外码）
 	
-	@JSONField(ordinal = 6)
+	@JSONField(ordinal = 5)
 	private String ed_num; //题号或者实验编码 1-1
 	
-	@JSONField(ordinal = 7)
+	@JSONField(ordinal = 6)
 	private double ed_points; //设定的分数
 	
-	@JSONField(ordinal = 8)
+	@JSONField(ordinal = 7)
 	private double ed_score; //得分 
 	
-	@JSONField(ordinal = 9)
+	@JSONField(ordinal = 8)
 	private double ed_sc_rt; //得分率
 	
 	
@@ -48,20 +45,7 @@ public class EvaluationDetail {
 		this.ed_id = ed_id;
 	}
 
-
-
-	public int getCo_id() {
-		return co_id;
-	}
-
-
-
-	public void setCo_id(int co_id) {
-		this.co_id = co_id;
-	}
-
-
-
+ 
 	public int getCont_id() {
 		return cont_id;
 	}
@@ -150,7 +134,6 @@ public class EvaluationDetail {
 		JSONObject j = new JSONObject();
 		
 		j.put("ed_id", ed_id);
-		j.put("co_id", co_id);
 		j.put("cont_id", cont_id);
 		j.put("cs_id", cs_id);
 		j.put("et_id", et_id);
