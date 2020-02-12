@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import team.zucc.eecs.dao.ContentObjectiveDao;
 import team.zucc.eecs.dao.EvaluationDao;
 import team.zucc.eecs.dao.EvaluationDetailDao;
+import team.zucc.eecs.dao.PracticeObjectiveDao;
 import team.zucc.eecs.model.ContentObjective;
 import team.zucc.eecs.model.Evaluation;
 import team.zucc.eecs.model.EvaluationDetail;
+import team.zucc.eecs.model.PracticeObjective;
 
 @Component("EvaluationServiceImpl")
 public class EvaluationServiceImpl implements EvaluationService {
@@ -26,6 +28,9 @@ public class EvaluationServiceImpl implements EvaluationService {
 	
 	@Autowired
 	private  ContentObjectiveDao contentObjectiveDao;
+	
+	@Autowired
+	private  PracticeObjectiveDao practiceObjective;
 	
 	@Override
 	public int existEvaluationByCs_idAndCo_idAndEt_id(int cs_id, int co_id, int et_id) {
@@ -92,33 +97,62 @@ public class EvaluationServiceImpl implements EvaluationService {
 			if (e == null) {
 				return 1; //不存在
 			}
-			
-			List<ContentObjective> contentObjectiveList = contentObjectiveDao.getContentObjectiveByCo_id(co_id);
-			Set<Integer> cont_idSet = new HashSet<Integer>();
-			for(ContentObjective co : contentObjectiveList) {
-				cont_idSet.add(co.getCont_id());
+			if(et_id == 2) {
+				List<ContentObjective> contentObjectiveList = contentObjectiveDao.getContentObjectiveByCo_id(co_id);
+				Set<Integer> cont_idSet = new HashSet<Integer>();
+				for(ContentObjective co : contentObjectiveList) {
+					cont_idSet.add(co.getCont_id());
+				}
+				List<EvaluationDetail> edList = new ArrayList<EvaluationDetail>();
+				for(Integer cont_id : cont_idSet) {
+					List<EvaluationDetail> edList1 = evaluationDetailDao.getEvaluationDatailListByCont_idAndCs_idAndEt_id(cont_id, cs_id, et_id);
+					edList.addAll(edList1);
+				}
+				int eval_id = e.getEval_id();
+				double eval_prop = e.getEval_prop();
+				double eval_points = 0;
+				double eval_score = 0;
+				double eval_sc_rt = 0;
+				double eval_achv = 1.0;
+				for(EvaluationDetail ed : edList) {
+					eval_points += ed.getEd_points();
+					eval_score += ed.getEd_score();
+				}
+				if(eval_points > 0)eval_sc_rt = eval_score / eval_points;
+				else eval_sc_rt = 0;
+				
+				eval_achv = eval_sc_rt * eval_prop;
+				
+				evaluationDao.updateEvaluationByEval_id(eval_id, co_id, cs_id, et_id, eval_prop, eval_points, eval_score, eval_sc_rt, eval_achv);
+			} else if (et_id == 1) {
+				List<PracticeObjective> practiceObjectiveList = practiceObjective.getPracticeObjectiveByCo_id(co_id);
+				Set<Integer> pra_idSet = new HashSet<Integer>();
+				for(PracticeObjective po : practiceObjectiveList) {
+					pra_idSet.add(po.getPra_id());
+				}
+				List<EvaluationDetail> edList = new ArrayList<EvaluationDetail>();
+				for(Integer pra_id : pra_idSet) {
+					List<EvaluationDetail> edList1 = evaluationDetailDao.getEvaluationDatailListByCont_idAndCs_idAndEt_id(pra_id, cs_id, et_id);
+					edList.addAll(edList1);
+				}
+				int eval_id = e.getEval_id();
+				double eval_prop = e.getEval_prop();
+				double eval_points = 0;
+				double eval_score = 0;
+				double eval_sc_rt = 0;
+				double eval_achv = 1.0;
+				for(EvaluationDetail ed : edList) {
+					eval_points += ed.getEd_points();
+					eval_score += ed.getEd_score();
+				}
+				if(eval_points > 0)eval_sc_rt = eval_score / eval_points;
+				else eval_sc_rt = 0;
+				
+				eval_achv = eval_sc_rt * eval_prop;
+				
+				evaluationDao.updateEvaluationByEval_id(eval_id, co_id, cs_id, et_id, eval_prop, eval_points, eval_score, eval_sc_rt, eval_achv);
 			}
-			List<EvaluationDetail> edList = new ArrayList<EvaluationDetail>();
-			for(Integer cont_id : cont_idSet) {
-				List<EvaluationDetail> edList1 = evaluationDetailDao.getEvaluationDatailListByCont_idAndCs_idAndEt_id(cont_id, cs_id, et_id);
-				edList.addAll(edList1);
-			}
-			int eval_id = e.getEval_id();
-			double eval_prop = e.getEval_prop();
-			double eval_points = 0;
-			double eval_score = 0;
-			double eval_sc_rt = 0;
-			double eval_achv = 1.0;
-			for(EvaluationDetail ed : edList) {
-				eval_points += ed.getEd_points();
-				eval_score += ed.getEd_score();
-			}
-			if(eval_points > 0)eval_sc_rt = eval_score / eval_points;
-			else eval_sc_rt = 0;
 			
-			eval_achv = eval_sc_rt * eval_prop;
-			
-			evaluationDao.updateEvaluationByEval_id(eval_id, co_id, cs_id, et_id, eval_prop, eval_points, eval_score, eval_sc_rt, eval_achv);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
