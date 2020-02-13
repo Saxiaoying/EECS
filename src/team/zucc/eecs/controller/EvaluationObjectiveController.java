@@ -17,11 +17,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 
 import team.zucc.eecs.model.Course;
+import team.zucc.eecs.model.CourseContent;
 import team.zucc.eecs.model.CourseObjective;
+import team.zucc.eecs.model.CoursePractice;
 import team.zucc.eecs.model.CourseSet;
 import team.zucc.eecs.model.Evaluation;
 import team.zucc.eecs.model.EvaluationType;
+import team.zucc.eecs.service.CourseContentService;
 import team.zucc.eecs.service.CourseObjectiveService;
+import team.zucc.eecs.service.CoursePracticeService;
 import team.zucc.eecs.service.CourseService;
 import team.zucc.eecs.service.CourseSetService;
 import team.zucc.eecs.service.EvaluationService;
@@ -44,11 +48,18 @@ public class EvaluationObjectiveController {
 	@Autowired
 	private EvaluationService evaluationService;
 	
+	
+	@Autowired
+	private CourseContentService courseContentService;
+	
+	@Autowired
+	private CoursePracticeService  coursePracticeService;
+	
 	@RequestMapping(value = { "/getEvaluationObjective" }, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getEvaluationObjective(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println("进入getEvaluationObjective-getEvaluationObjective");
+		System.out.println("进入EvaluationObjectiveController-getEvaluationObjective");
 		
 		JSONObject obj = new JSONObject();
 		try {
@@ -86,13 +97,25 @@ public class EvaluationObjectiveController {
 				}
 			}
 			
+			List<CourseContent> courseContentList = courseContentService.getCourseContentListByCs_id(courseSet.getCs_id());
+			if(courseContentList == null) {
+				courseContentList = new ArrayList<CourseContent>();
+			}
+			
+			List<CoursePractice> coursePracticeList = coursePracticeService.getCoursePracticeListByCs_id(courseSet.getCs_id());
+			if(coursePracticeList == null) {
+				coursePracticeList = new ArrayList<CoursePractice>();
+			}
 			obj.put("courseSet", courseSet);
 			obj.put("course", course);
 			obj.put("courseObjectiveList", courseObjectiveList);
 			obj.put("courseObjectiveList_num", courseObjectiveList.size());
 			obj.put("evaluationList", evaluationList);
 			obj.put("evaluationList_num", evaluationList.size());
-			
+			obj.put("courseContentList", courseContentList);
+			obj.put("courseContentList_num", courseContentList.size());
+			obj.put("coursePracticeList", coursePracticeList);
+			obj.put("coursePracticeList_num", coursePracticeList.size());
 			obj.put("state", "OK");
 		} catch (Exception e) {
 			e.printStackTrace();

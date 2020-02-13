@@ -1,10 +1,236 @@
+<!-- This is maintained by jyl.  -->
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>课程目标评价</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="../css/font.css">
+<link rel="stylesheet" href="../css/xadmin.css">
+<script src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/layui/layui.js"
+	charset="utf-8"></script>
+<script type="text/javascript" src="../js/xadmin.js"></script>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
 
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+	var courseObjectiveList;
+	var courseObjectiveList_num;
+	
+	var evaluationTypeList;
+	var evaluationTypeList_num;
+	
+	var courseContentList;
+	var courseContentList_num;
+	
+	
+	var coursePracticeList;
+	var coursePracticeList_num;
+	
+	var coz_name_ch;
+	var coz_id;
+	var cs_id;
+	
+	function getEtList(){
+		$.ajax({
+			url: '/EECS/ajax/getEvaluationType',
+			type: 'POST',
+			data: JSON.stringify({
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+					evaluationTypeList = data.evaluationTypeList;
+					evaluationTypeList_num = data.evaluationTypeList_num;
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
+	/* function change(){
+		
+	} */
+	
+	function search(){
+		$.ajax({
+			url: '/EECS/ajax/getEvaluationObjective',
+			type: 'POST',
+			data: JSON.stringify({
+				coz_id:$("#coz_id").val(),
+				cs_acad_yr:$("#cs_acad_yr").val(),
+				cs_sem:$("#cs_sem").val()
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+					coz_name_ch = data.course.coz_name_ch;
+					coz_id = data.course.coz_id;
+					cs_id = data.courseSet.cs_id;
+					courseObjectiveList = data.courseObjectiveList;
+					courseObjectiveList_num = data.courseObjectiveList_num;
+					courseContentList = data.courseContentList;
+					courseContentList_num = data.courseContentList_num;
+					coursePracticeList = data.coursePracticeList;
+					coursePracticeList_num = data.coursePracticeList_num;
+					if(courseObjectiveList_num == 0) {
+						alert("该课程暂无课程目标，请前往设置");
+					} else show_data();
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
+	
+	
+	$(function(){
+		getEtList();
+		init_list();
+	}) 
+	
+	function show_data(){
+		document.getElementById("tablePlace").style.display="";//显示
+		for(i = 0; i < evaluationTypeList_num; i++) {
+			document.getElementById("etName_" + i).innerHTML = evaluationTypeList[i].et_name;
+			for(j = 0; j < courseObjectiveList_num; j++) {
+				document.getElementById("et_"+ i +"_objNum_" + j).style.display="";//显示
+			}
+		}
+		
+		for(i = 0; i < courseContentList_num; i++) {
+			document.getElementById("et_1_contObj_" + i).style.display="";//显示
+			document.getElementById("et_1_contNum_" + i).innerHTML = courseContentList[i].cont_num;
+			document.getElementById("et_1_contName_" + i).innerHTML = courseContentList[i].cont_name;
+			for(j = 0; j < courseObjectiveList_num; j++) {
+				document.getElementById("et_1_contObj_" + i + "_" + j).style.display="";//显示
+			}
+		}
+	}
+	
+	function init_list() {
+		var html = "";
+		/* for(var i = 0; i < evaluationTypeList_num; i++) {
+			html += '<input type="checkbox" name="et" id="et_item' + i + '" title="' + evaluationTypeList[i].et_name + '" checked="checked" value="' + evaluationTypeList[i].et_name + '" >' +
+			'<div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin=""><span>' + evaluationTypeList[i].et_name + '</span><i class="layui-icon"></i></div>';
+		} 
+		document.getElementById("etList").innerHTML = html;  */
+		
+		html = "<div id='tablePlace' style='display:none'>";
+		for(var k = 0; k <evaluationTypeList_num; k++) {
+			html += '<fieldset class="layui-elem-field"  id="et_'+ k +'">' +
+			'<legend  id="etName_' + k + '"></legend>' +
+				'<div class="layui-field-box" >' +
+					'<table class="layui-table" >' +
+						'<tbody>' +
+							'<tr>' +
+								'<th rowspan="2">编号</th>' +
+								'<th rowspan="2">教学内容</th>' +
+								'<th colspan="20">课程目标</th>' +
+							'</tr>' +
+							'<tr>';
+							for(var i = 0; i < 20; i ++) {
+								html +=  '<th id="et_'+ k +'_objNum_'+ i +'" style="display:none">' + (i + 1) + '</th>';
+							}
+							html += '</tr>';
+					for(var i = 0; i < 20; i ++) {
+						html +=
+							'<tr id="et_'+ k +'_contObj_'+ i + '" style="display:none">' +
+								'<td id="et_'+ k +'_contNum_' + i + '"></td>' +
+								'<td id="et_'+ k +'_contName_'+ i +'"></td>';
+								for(var j = 0; j < 20; j ++) {
+									html +=
+									'<td id="et_'+ k +'_contObj_'+ i + '_' + j + '" style="display:none">' +
+										'<div class="layui-form-item layui-form">' +
+											'<input type="checkbox" name="et" checked="checked" value="1" >' +
+											'<div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="">' +
+												'<i class="layui-icon"></i>' +
+											'</div>' +
+										'</div>' +
+									'</td>';
+								}
+								html +='</tr>';
+					}
+					html +=
+						'</tbody>' +
+						'</table>' +
+						'<div style="text-align: center">' +
+							'<button class="layui-btn" onclick="confirm(' + k + ')" type="button">确认</button>' +
+						'</div>' +
+					'</div>' +
+				'</fieldset>';
+		}
+		html += "</div>";
+		document.getElementById("obj-contList").innerHTML = html; 
+	}
+</script>
+
+<body>
+	<div class="x-nav">
+		<span class="layui-breadcrumb"> <a href="">EECS</a> <a href="">评价指标管理</a>
+			<a> <cite>课程目标-教学内容</cite></a>
+		</span> <a class="layui-btn layui-btn-primary layui-btn-small"
+			style="line-height: 1.6em; margin-top: 3px; float: right"
+		href="javascript:location.replace(location.href);" title="刷新"> <i
+		class="layui-icon" style="line-height: 38px">ဂ</i></a>
+	</div>
+	<div class="x-body">
+		<div class="layui-row">
+			<form class="layui-form layui-col-md12 x-so">
+				<input class="layui-input" placeholder="课程号" id="coz_id"> 
+				<div class="layui-input-inline">
+					<select id="cs_acad_yr">
+						<option value="学年（所有）">学年（所有）</option>
+						<option value="2016-2017">2016-2017</option>
+						<option value="2017-2018">2017-2018</option>
+						<option value="2018-2019">2018-2019</option>
+						<option value="2019-2020">2019-2020</option>
+						<option value="2020-2021">2020-2021</option>
+						<option value="2021-2022">2021-2022</option>
+					</select>
+				</div>
+				<div class="layui-input-inline">
+					<select id="cs_sem">
+						<option value="学期（所有）">学期（所有）</option>
+						<option value="一">一</option>
+						<option value="二">二</option>
+					</select>
+				</div>
+				<button class="layui-btn" type="button"
+					onclick="search()">
+					<i class="layui-icon">&#xe615;</i>
+				</button>
+			</form>
+			
+			<!-- <div class="layui-form-item layui-form">
+				<label class="layui-form-label">考核项目：</label>
+				<div class="layui-input-block" id="etList" onclick="change()">
+				</div>
+			</div> -->
+		</div>
+	</div>
+	
+	<div class="x-body layui-anim layui-anim-up" id= "obj-contList">
+	</div>
 </body>
 </html>
