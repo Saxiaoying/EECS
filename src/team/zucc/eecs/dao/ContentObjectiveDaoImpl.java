@@ -41,7 +41,7 @@ public class ContentObjectiveDaoImpl implements ContentObjectiveDao {
 
 	@Override
 	public ContentObjective getContentObjectiveByCo_idAndCont_id(int co_id, int cont_id) {
-		return template.query("select * from tb_cont_co where co_id =" +co_id, new ResultSetExtractor<ContentObjective>() {
+		return template.query("select * from tb_cont_co where co_id =" +co_id + " and cont_id=" + cont_id, new ResultSetExtractor<ContentObjective>() {
 			@Override
 			public ContentObjective extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {

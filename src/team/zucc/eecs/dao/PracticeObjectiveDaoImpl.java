@@ -41,7 +41,7 @@ public class PracticeObjectiveDaoImpl implements PracticeObjectiveDao {
 
 	@Override
 	public PracticeObjective getPracticeObjectiveByCo_idAndPra_id(int co_id, int pra_id) {
-		return template.query("select * from tb_pra_co where co_id =" +co_id, new ResultSetExtractor<PracticeObjective>() {
+		return template.query("select * from tb_pra_co where co_id =" +co_id +" and pra_id=" + pra_id, new ResultSetExtractor<PracticeObjective>() {
 			@Override
 			public PracticeObjective extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {

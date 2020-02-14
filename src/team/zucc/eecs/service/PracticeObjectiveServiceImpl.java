@@ -26,9 +26,9 @@ public class PracticeObjectiveServiceImpl implements PracticeObjectiveService {
 	}
 
 	@Override
-	public PracticeObjective getPracticeObjectiveByCo_idAndPra_id(int pc_id, int pra_id) {
+	public PracticeObjective getPracticeObjectiveByCo_idAndPra_id(int co_id, int pra_id) {
 		try {
-			PracticeObjective practiceObjective=practiceObjectiveDao.getPracticeObjectiveByCo_idAndPra_id(pc_id, pra_id);
+			PracticeObjective practiceObjective=practiceObjectiveDao.getPracticeObjectiveByCo_idAndPra_id(co_id, pra_id);
 			return practiceObjective;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,9 +59,9 @@ public class PracticeObjectiveServiceImpl implements PracticeObjectiveService {
 	}
 
 	@Override
-	public int addPracticeObjective(int pc_id, int co_id, int pra_id) {
+	public int addPracticeObjective(int co_id, int pra_id) {
 		try {
-			PracticeObjective practiceObjective=practiceObjectiveDao.getPracticeObjectiveByCo_idAndPra_id(pc_id, pra_id);
+			PracticeObjective practiceObjective=practiceObjectiveDao.getPracticeObjectiveByCo_idAndPra_id(co_id, pra_id);
 			if (practiceObjective != null) {
 				return 1;
 			}

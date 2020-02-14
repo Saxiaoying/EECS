@@ -30,6 +30,8 @@
 	var evaluationTypeList;
 	var evaluationTypeList_num;
 	
+	var evaluationTypeList_id;
+	
 	var courseContentList;
 	var courseContentList_num;
 	
@@ -40,6 +42,9 @@
 	var coz_name_ch;
 	var coz_id;
 	var cs_id;
+	
+	var obj_cont;
+	var obj_pra;
 	
 	function getEtList(){
 		$.ajax({
@@ -63,9 +68,6 @@
 			}
 		});
 	}
-	/* function change(){
-		
-	} */
 	
 	function search(){
 		$.ajax({
@@ -90,9 +92,23 @@
 					courseContentList_num = data.courseContentList_num;
 					coursePracticeList = data.coursePracticeList;
 					coursePracticeList_num = data.coursePracticeList_num;
+					obj_cont = data.obj_cont;
+					obj_pra = data.obj_pra;
 					if(courseObjectiveList_num == 0) {
 						alert("该课程暂无课程目标，请前往设置");
-					} else show_data();
+						return;
+					} 
+				    evaluationTypeList_id = $("#et_id").val();
+					var s = evaluationTypeList[evaluationTypeList_id].et_name;
+					if(s == '实验') {
+						if(coursePracticeList_num == 0) alert("该课程暂无课程实验，请前往设置");
+						else show_data();
+					} else if(s == '考试'){
+						if(courseContentList_num == 0) alert("该课程暂无课程教学内容，请前往设置");
+						else show_data();
+					} else {
+						alert("请选择评估类型");
+					}
 				} else {
 					alert(data.state);
 				}
@@ -103,43 +119,212 @@
 		});
 	}
 	
+	function addObjPra(co_id, pra_id){
+		$.ajax({
+			url: '/EECS/ajax/addEvaluationObjectivePra',
+			type: 'POST',
+			data: JSON.stringify({
+				co_id:co_id,
+				pra_id:pra_id
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
 	
+	function delObjPra(co_id, pra_id){
+		$.ajax({
+			url: '/EECS/ajax/delEvaluationObjectivePra',
+			type: 'POST',
+			data: JSON.stringify({
+				co_id:co_id,
+				pra_id:pra_id
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
+	function addObjCont(co_id, cont_id){
+		$.ajax({
+			url: '/EECS/ajax/addEvaluationObjectiveCont',
+			type: 'POST',
+			data: JSON.stringify({
+				co_id:co_id,
+				cont_id:cont_id
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
+	function delObjCont(co_id, cont_id){
+		$.ajax({
+			url: '/EECS/ajax/delEvaluationObjectiveCont',
+			type: 'POST',
+			data: JSON.stringify({
+				co_id:co_id,
+				cont_id:cont_id
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+	}
+	
+	function confirm(){
+		var s = evaluationTypeList[evaluationTypeList_id].et_name;
+		if(s == '实验') {
+			for(var i = 0; i < courseObjectiveList_num; i++) {
+				for(var j = 0; j < coursePracticeList_num; j++ ) {
+					if(document.getElementById("contObjItem_" + j+ "_"+i).checked == true) {
+						obj_pra[i][j] = 1;
+						addObjPra(courseObjectiveList[i].co_id, coursePracticeList[j].pra_id);
+					}
+					else {
+						obj_pra[i][j] = 0;
+						delObjPra(courseObjectiveList[i].co_id, coursePracticeList[j].pra_id);
+					}
+				}
+			}
+		} else if(s == '考试'){
+			for(var i = 0; i < courseObjectiveList_num; i++) {
+				for(var j = 0; j < courseContentList_num; j++ ) {
+					if(document.getElementById("contObjItem_" + j+ "_"+i).checked == true) {
+						obj_cont[i][j] = 1;
+						addObjCont(courseObjectiveList[i].co_id, courseContentList[j].cont_id);
+					}
+					else {
+						obj_cont[i][j] == 0;
+						delObjCont(courseObjectiveList[i].co_id, courseContentList[j].cont_id);
+					}
+				}
+			}
+		}
+	}
 	$(function(){
 		getEtList();
 		init_list();
 	}) 
 	
 	function show_data(){
-		document.getElementById("tablePlace").style.display="";//显示
-		for(i = 0; i < evaluationTypeList_num; i++) {
-			document.getElementById("etName_" + i).innerHTML = evaluationTypeList[i].et_name;
-			for(j = 0; j < courseObjectiveList_num; j++) {
-				document.getElementById("et_"+ i +"_objNum_" + j).style.display="";//显示
+		document.getElementById("tableList").style.display="";//显示
+		document.getElementById("etName").innerHTML = evaluationTypeList[evaluationTypeList_id].et_name;
+		for(i = 0; i < courseObjectiveList_num; i++) {
+			document.getElementById("objNum_" + i).style.display="";//显示
+		}
+		var s = evaluationTypeList[evaluationTypeList_id].et_name;
+		if(s == '实验') {
+			for(i = 0; i < coursePracticeList_num; i++) {
+				document.getElementById("contObj_" + i).style.display="";//显示
+				document.getElementById("contNum_" + i).innerHTML = coursePracticeList[i].pra_num;
+				document.getElementById("contName_" + i).innerHTML = coursePracticeList[i].pra_name;
+				for(j = 0; j < courseObjectiveList_num; j++) {
+					document.getElementById("contObj_" + i + "_" + j).style.display="";//显示
+				}
+				for(j = courseObjectiveList_num; j < 20; j++) {
+					document.getElementById("contObj_" + i + "_" + j).style.display="none";//显示
+				}
+			}
+			
+			for(var i = 0; i < courseObjectiveList_num; i++) {
+				for(var j = 0; j < coursePracticeList_num; j++ ) {
+					if(obj_pra[i][j] == 1) {
+						document.getElementById("contObjItem_" + j+ "_"+i).checked = true;
+					}
+					else {
+						document.getElementById("contObjItem_" + j+ "_"+i).checked = false;
+					}
+				}
+			}
+			for(i = coursePracticeList_num; i < 20; i++) {
+				document.getElementById("contObj_" + i).style.display="none";//显示
+				for(j = 0; j < 20; j++) {
+					document.getElementById("contObj_" + i + "_" + j).style.display="none";//显示
+				}
+			}
+		} else if(s == '考试'){
+			for(i = 0; i < courseContentList_num; i++) {
+				document.getElementById("contObj_" + i).style.display="";//显示
+				document.getElementById("contNum_" + i).innerHTML = courseContentList[i].cont_num;
+				document.getElementById("contName_" + i).innerHTML = courseContentList[i].cont_name;
+				for(j = 0; j < courseObjectiveList_num; j++) {
+					document.getElementById("contObj_" + i + "_" + j).style.display="";//显示
+				}
+				for(j = courseObjectiveList_num; j < 20; j++) {
+					document.getElementById("contObj_" + i + "_" + j).style.display="none";//显示
+				}
+			}
+			for(var i = 0; i < courseObjectiveList_num; i++) {
+				for(var j = 0; j < courseContentList_num; j++ ) {
+					if(obj_cont[i][j] == 1) {
+						document.getElementById("contObjItem_" + j+ "_"+i).checked = true;
+					}
+					else {
+						document.getElementById("contObjItem_" + j+ "_"+i).checked = false;
+					}
+				}
+			}
+			
+			for(i = courseContentList_num; i < 20; i++) {
+				document.getElementById("contObj_" + i).style.display="none";//显示
+				for(j = 0; j < 20; j++) {
+					document.getElementById("contObj_" + i + "_" + j).style.display="none";//显示
+				}
 			}
 		}
 		
-		for(i = 0; i < courseContentList_num; i++) {
-			document.getElementById("et_1_contObj_" + i).style.display="";//显示
-			document.getElementById("et_1_contNum_" + i).innerHTML = courseContentList[i].cont_num;
-			document.getElementById("et_1_contName_" + i).innerHTML = courseContentList[i].cont_name;
-			for(j = 0; j < courseObjectiveList_num; j++) {
-				document.getElementById("et_1_contObj_" + i + "_" + j).style.display="";//显示
-			}
-		}
 	}
-	
 	function init_list() {
-		var html = "";
-		/* for(var i = 0; i < evaluationTypeList_num; i++) {
-			html += '<input type="checkbox" name="et" id="et_item' + i + '" title="' + evaluationTypeList[i].et_name + '" checked="checked" value="' + evaluationTypeList[i].et_name + '" >' +
-			'<div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin=""><span>' + evaluationTypeList[i].et_name + '</span><i class="layui-icon"></i></div>';
+		var html = '<select id="et_id"><option value="评估类型">评估类型</option>';
+		for(var i = 0; i < evaluationTypeList_num; i++) {
+			html += 
+			'<option value="' + i  + '">' + evaluationTypeList[i].et_name + '</option>'; 
 		} 
-		document.getElementById("etList").innerHTML = html;  */
+		html += '</select>';
+		document.getElementById("etOption").innerHTML = html;  
 		
-		html = "<div id='tablePlace' style='display:none'>";
-		for(var k = 0; k <evaluationTypeList_num; k++) {
-			html += '<fieldset class="layui-elem-field"  id="et_'+ k +'">' +
-			'<legend  id="etName_' + k + '"></legend>' +
+		html = "";
+		html += '<div style="display:none"  id="tableList">' +
+		 '<fieldset class="layui-elem-field">' +
+			'<legend  id="etName"></legend>' +
 				'<div class="layui-field-box" >' +
 					'<table class="layui-table" >' +
 						'<tbody>' +
@@ -150,23 +335,23 @@
 							'</tr>' +
 							'<tr>';
 							for(var i = 0; i < 20; i ++) {
-								html +=  '<th id="et_'+ k +'_objNum_'+ i +'" style="display:none">' + (i + 1) + '</th>';
+								html +=  '<th id="objNum_'+ i +'" style="display:none">' + (i + 1) + '</th>';
 							}
 							html += '</tr>';
 					for(var i = 0; i < 20; i ++) {
 						html +=
-							'<tr id="et_'+ k +'_contObj_'+ i + '" style="display:none">' +
-								'<td id="et_'+ k +'_contNum_' + i + '"></td>' +
-								'<td id="et_'+ k +'_contName_'+ i +'"></td>';
+							'<tr id="contObj_'+ i + '" style="display:none">' +
+								'<td id="contNum_'+ i +'"></td>' +
+								'<td id="contName_'+ i +'"></td>';
 								for(var j = 0; j < 20; j ++) {
 									html +=
-									'<td id="et_'+ k +'_contObj_'+ i + '_' + j + '" style="display:none">' +
-										'<div class="layui-form-item layui-form">' +
-											'<input type="checkbox" name="et" checked="checked" value="1" >' +
-											'<div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="">' +
+									'<td id="contObj_'+ i + '_' + j + '" style="display:none">' +
+										//'<div class="layui-form-item layui-form">' +
+											'<input type="checkbox" id="contObjItem_'+ i + '_' + j + '" value="1" >' +
+											/* '<div class="layui-unselect layui-form-checkbox">' +
 												'<i class="layui-icon"></i>' +
-											'</div>' +
-										'</div>' +
+											'</div>' + */
+										//'</div>' +
 									'</td>';
 								}
 								html +='</tr>';
@@ -175,11 +360,10 @@
 						'</tbody>' +
 						'</table>' +
 						'<div style="text-align: center">' +
-							'<button class="layui-btn" onclick="confirm(' + k + ')" type="button">确认</button>' +
+							'<button class="layui-btn" onclick="confirm()" type="button">确认</button>' +
 						'</div>' +
 					'</div>' +
 				'</fieldset>';
-		}
 		html += "</div>";
 		document.getElementById("obj-contList").innerHTML = html; 
 	}
@@ -200,7 +384,7 @@
 				<input class="layui-input" placeholder="课程号" id="coz_id"> 
 				<div class="layui-input-inline">
 					<select id="cs_acad_yr">
-						<option value="学年（所有）">学年（所有）</option>
+						<option value="学年">学年</option>
 						<option value="2016-2017">2016-2017</option>
 						<option value="2017-2018">2017-2018</option>
 						<option value="2018-2019">2018-2019</option>
@@ -211,10 +395,12 @@
 				</div>
 				<div class="layui-input-inline">
 					<select id="cs_sem">
-						<option value="学期（所有）">学期（所有）</option>
+						<option value="学期">学期</option>
 						<option value="一">一</option>
 						<option value="二">二</option>
 					</select>
+				</div>
+				<div class="layui-input-inline" id="etOption">
 				</div>
 				<button class="layui-btn" type="button"
 					onclick="search()">

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 
+import team.zucc.eecs.model.ContentObjective;
 import team.zucc.eecs.model.Course;
 import team.zucc.eecs.model.CourseContent;
 import team.zucc.eecs.model.CourseObjective;
@@ -23,6 +24,8 @@ import team.zucc.eecs.model.CoursePractice;
 import team.zucc.eecs.model.CourseSet;
 import team.zucc.eecs.model.Evaluation;
 import team.zucc.eecs.model.EvaluationType;
+import team.zucc.eecs.model.PracticeObjective;
+import team.zucc.eecs.service.ContentObjectiveService;
 import team.zucc.eecs.service.CourseContentService;
 import team.zucc.eecs.service.CourseObjectiveService;
 import team.zucc.eecs.service.CoursePracticeService;
@@ -30,6 +33,7 @@ import team.zucc.eecs.service.CourseService;
 import team.zucc.eecs.service.CourseSetService;
 import team.zucc.eecs.service.EvaluationService;
 import team.zucc.eecs.service.EvaluationTypeService;
+import team.zucc.eecs.service.PracticeObjectiveService;
 
 @Controller("EvaluationObjectiveController")
 public class EvaluationObjectiveController {
@@ -55,6 +59,12 @@ public class EvaluationObjectiveController {
 	@Autowired
 	private CoursePracticeService  coursePracticeService;
 	
+	@Autowired
+	private ContentObjectiveService contentObjectiveService;
+	
+	@Autowired
+	private PracticeObjectiveService practiceObjectiveService;
+	 
 	@RequestMapping(value = { "/getEvaluationObjective" }, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getEvaluationObjective(@RequestBody JSONObject in, HttpServletRequest request,
@@ -117,6 +127,34 @@ public class EvaluationObjectiveController {
 			obj.put("coursePracticeList", coursePracticeList);
 			obj.put("coursePracticeList_num", coursePracticeList.size());
 			obj.put("state", "OK");
+			
+			
+			
+			int [][]obj_cont = new int[courseObjectiveList.size()][courseContentList.size()];
+			int [][]obj_pra = new int[courseObjectiveList.size()][coursePracticeList.size()];
+			
+			for(int i = 0; i < courseObjectiveList.size(); i++) {
+				for(int j = 0; j < courseContentList.size(); j++ ) {
+					ContentObjective co = 
+							contentObjectiveService.
+							getContentObjectiveByCo_idAndCont_id(courseObjectiveList.get(i).getCo_id(), courseContentList.get(j).getCont_id());
+					if(co == null) obj_cont[i][j] = 0;
+					else obj_cont[i][j] = 1;
+				}
+			}
+			
+			for(int i = 0; i < courseObjectiveList.size(); i++) {
+				for(int j = 0; j < coursePracticeList.size(); j++ ) {
+					PracticeObjective po = 
+							practiceObjectiveService.
+							getPracticeObjectiveByCo_idAndPra_id(courseObjectiveList.get(i).getCo_id(), coursePracticeList.get(j).getPra_id());
+					if(po == null) obj_pra[i][j] = 0;
+					else obj_pra[i][j] = 1;
+				}
+			}
+			
+			obj.put("obj_cont", obj_cont);
+			obj.put("obj_pra", obj_pra);
 		} catch (Exception e) {
 			e.printStackTrace();
 			obj.put("state", "数据库错误！");
@@ -160,5 +198,119 @@ public class EvaluationObjectiveController {
 		}
 		return obj;
 	}
-
+	
+	@RequestMapping(value = { "/addEvaluationObjectivePra" }, method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject addEvaluationObjectivePra(@RequestBody JSONObject in, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("进入getEvaluationObjective-addEvaluationObjectivePra");
+		
+		JSONObject obj = new JSONObject();
+		try {
+			int co_id = in.getIntValue("co_id");
+			int pra_id = in.getIntValue("pra_id");
+			
+			int f = practiceObjectiveService.addPracticeObjective(co_id, pra_id);
+			
+			if(f >= 0) {
+				obj.put("state", "OK");
+			} else {
+				obj.put("state", "数据库错误！");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("state", "数据库错误！");
+			return obj;
+		}
+		return obj;
+	}
+	
+	@RequestMapping(value = { "/addEvaluationObjectiveCont" }, method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject addEvaluationObjectiveCont(@RequestBody JSONObject in, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("进入getEvaluationObjective-addEvaluationObjectiveCont");
+		
+		JSONObject obj = new JSONObject();
+		try {
+			int co_id = in.getIntValue("co_id");
+			int cont_id = in.getIntValue("cont_id");
+			
+			int f = contentObjectiveService.addContentObjective(co_id, cont_id);
+			
+			if(f >= 0) {
+				obj.put("state", "OK");
+			} else {
+				obj.put("state", "数据库错误！");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("state", "数据库错误！");
+			return obj;
+		}
+		return obj;
+	}
+	
+	@RequestMapping(value = { "/delEvaluationObjectivePra" }, method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject delEvaluationObjectivePra(@RequestBody JSONObject in, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("进入getEvaluationObjective-delEvaluationObjectivePra");
+		
+		JSONObject obj = new JSONObject();
+		try {
+			int co_id = in.getIntValue("co_id");
+			int pra_id = in.getIntValue("pra_id");
+			PracticeObjective practiceObjective = practiceObjectiveService.getPracticeObjectiveByCo_idAndPra_id(co_id, pra_id);
+			if(practiceObjective == null) {
+				obj.put("state", "OK");
+				return obj;
+			}
+			int f = practiceObjectiveService.deletePracticeObjectiveByPc_id(practiceObjective.getPc_id());
+			
+			if(f >= 0) {
+				obj.put("state", "OK");
+			} else {
+				obj.put("state", "数据库错误！");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("state", "数据库错误！");
+			return obj;
+		}
+		return obj;
+	}
+	
+	
+	@RequestMapping(value = { "/delEvaluationObjectiveCont" }, method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject delEvaluationObjectiveCont(@RequestBody JSONObject in, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("进入getEvaluationObjective-delEvaluationObjectiveCont");
+		
+		JSONObject obj = new JSONObject();
+		try {
+			int co_id = in.getIntValue("co_id");
+			int cont_id = in.getIntValue("cont_id");
+			
+			ContentObjective contentObjective = contentObjectiveService.getContentObjectiveByCo_idAndCont_id(co_id, cont_id);
+			if(contentObjective == null) {
+				obj.put("state", "OK");
+				return obj;
+			}
+			int f = contentObjectiveService.deleteContentObjectiveByCco_id(contentObjective.getCco_id());
+			
+			if(f >= 0) {
+				obj.put("state", "OK");
+			} else {
+				obj.put("state", "数据库错误！");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("state", "数据库错误！");
+			return obj;
+		}
+		return obj;
+	}
+	
 }

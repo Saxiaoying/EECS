@@ -26,9 +26,9 @@ public class ContentObjectiveServiceImpl implements ContentObjectiveService {
 	}
 
 	@Override
-	public ContentObjective getContentObjectiveByCo_idAndCont_id(int cco_id, int cont_id) {
+	public ContentObjective getContentObjectiveByCo_idAndCont_id(int co_id, int cont_id) {
 		try {
-			ContentObjective contentObjective=contentObjectiveDao.getContentObjectiveByCo_idAndCont_id(cco_id, cont_id);
+			ContentObjective contentObjective=contentObjectiveDao.getContentObjectiveByCo_idAndCont_id(co_id, cont_id);
 			return contentObjective;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,9 +59,9 @@ public class ContentObjectiveServiceImpl implements ContentObjectiveService {
 	}
 
 	@Override
-	public int addContentObjective(int cco_id, int co_id, int cont_id) {
+	public int addContentObjective(int co_id, int cont_id) {
 		try {
-			ContentObjective contentObjective=contentObjectiveDao.getContentObjectiveByCo_idAndCont_id(cco_id, cont_id);
+			ContentObjective contentObjective=contentObjectiveDao.getContentObjectiveByCo_idAndCont_id(co_id, cont_id);
 			if (contentObjective != null) {
 				return 1;
 			}
