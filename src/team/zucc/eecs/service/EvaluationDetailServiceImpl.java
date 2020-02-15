@@ -47,9 +47,9 @@ public class EvaluationDetailServiceImpl implements EvaluationDetailService {
 	}
 
 	@Override
-	public EvaluationDetail getEvaluationDetailByInf(int cont_id, int cs_id, int et_id, String ed_num) {
+	public EvaluationDetail getEvaluationDetailByInf(int cs_id, int et_id, String ed_num) {
 		try {
-			EvaluationDetail ed = EvaluationDetailDao.getEvaluationDetailByInf(cont_id, cs_id, et_id, ed_num);
+			EvaluationDetail ed = EvaluationDetailDao.getEvaluationDetailByInf(cs_id, et_id, ed_num);
 			return ed;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,7 +61,7 @@ public class EvaluationDetailServiceImpl implements EvaluationDetailService {
 	public int addEvaluationDetail(int cont_id, int cs_id, int et_id, String ed_num, double ed_points,
 			double ed_score, double ed_sc_rt) {
 		try {
-			EvaluationDetail ed = EvaluationDetailDao.getEvaluationDetailByInf(cont_id, cs_id, et_id, ed_num);
+			EvaluationDetail ed = EvaluationDetailDao.getEvaluationDetailByInf(cs_id, et_id, ed_num);
 			if(ed != null) {
 				return 1; 
 			} else {

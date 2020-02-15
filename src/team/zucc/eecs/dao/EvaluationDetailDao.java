@@ -13,7 +13,7 @@ public interface EvaluationDetailDao {
 	EvaluationDetail getEvaluationDetailByEd_id(int ed_id);
 	List<EvaluationDetail> getEvaluationDatailListByCs_idAndEt_id(int cs_id, int et_id);
 	List<EvaluationDetail> getEvaluationDatailListByCont_idAndCs_idAndEt_id(int cont_id, int cs_id, int et_id);
-	EvaluationDetail getEvaluationDetailByInf(int cont_id, int cs_id, int et_id, String ed_num);
+	EvaluationDetail getEvaluationDetailByInf(int cs_id, int et_id, String ed_num);
 	
 	//添加
 	@Transactional(propagation = Propagation.REQUIRED)

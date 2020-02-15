@@ -65,8 +65,8 @@ public class EvaluationObjectiveController {
 	@Autowired
 	private PracticeObjectiveService practiceObjectiveService;
 	 
-	@RequestMapping(value = { "/getEvaluationObjective" }, method = RequestMethod.POST)
-	@ResponseBody
+	
+	
 	public JSONObject getEvaluationObjective(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
 		System.out.println("进入EvaluationObjectiveController-getEvaluationObjective");
@@ -127,12 +127,12 @@ public class EvaluationObjectiveController {
 			obj.put("coursePracticeList", coursePracticeList);
 			obj.put("coursePracticeList_num", coursePracticeList.size());
 			obj.put("state", "OK");
-			
-			
-			
+
+
+
 			int [][]obj_cont = new int[courseObjectiveList.size()][courseContentList.size()];
 			int [][]obj_pra = new int[courseObjectiveList.size()][coursePracticeList.size()];
-			
+
 			for(int i = 0; i < courseObjectiveList.size(); i++) {
 				for(int j = 0; j < courseContentList.size(); j++ ) {
 					ContentObjective co = 
@@ -142,7 +142,7 @@ public class EvaluationObjectiveController {
 					else obj_cont[i][j] = 1;
 				}
 			}
-			
+
 			for(int i = 0; i < courseObjectiveList.size(); i++) {
 				for(int j = 0; j < coursePracticeList.size(); j++ ) {
 					PracticeObjective po = 
@@ -152,7 +152,7 @@ public class EvaluationObjectiveController {
 					else obj_pra[i][j] = 1;
 				}
 			}
-			
+
 			obj.put("obj_cont", obj_cont);
 			obj.put("obj_pra", obj_pra);
 		} catch (Exception e) {
@@ -162,7 +162,6 @@ public class EvaluationObjectiveController {
 		}
 		return obj;
 	}
-	
 	
 	@RequestMapping(value = { "/updateEvaluationObjective" }, method = RequestMethod.POST)
 	@ResponseBody

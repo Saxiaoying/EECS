@@ -29,7 +29,7 @@ public class EvaluationDetailDaoImpl implements EvaluationDetailDao {
 					ed.setEd_id(rs.getInt("ed_id"));
 					ed.setCont_id(rs.getInt("cont_id"));
 					ed.setCs_id(rs.getInt("cs_id"));
-					ed.setEd_id(rs.getInt("et_id"));
+					ed.setEt_id(rs.getInt("et_id"));
 					ed.setEd_num(rs.getString("ed_num"));
 					ed.setEd_points(rs.getDouble("ed_points"));
 					ed.setEd_score(rs.getDouble("ed_score"));
@@ -53,7 +53,7 @@ public class EvaluationDetailDaoImpl implements EvaluationDetailDao {
 				ed.setEd_id(rs.getInt("ed_id"));
 				ed.setCont_id(rs.getInt("cont_id"));
 				ed.setCs_id(rs.getInt("cs_id"));
-				ed.setEd_id(rs.getInt("et_id"));
+				ed.setEt_id(rs.getInt("et_id"));
 				ed.setEd_num(rs.getString("ed_num"));
 				ed.setEd_points(rs.getDouble("ed_points"));
 				ed.setEd_score(rs.getDouble("ed_score"));
@@ -74,7 +74,7 @@ public class EvaluationDetailDaoImpl implements EvaluationDetailDao {
 				ed.setEd_id(rs.getInt("ed_id"));
 				ed.setCont_id(rs.getInt("cont_id"));
 				ed.setCs_id(rs.getInt("cs_id"));
-				ed.setEd_id(rs.getInt("et_id"));
+				ed.setEt_id(rs.getInt("et_id"));
 				ed.setEd_num(rs.getString("ed_num"));
 				ed.setEd_points(rs.getDouble("ed_points"));
 				ed.setEd_score(rs.getDouble("ed_score"));
@@ -86,9 +86,9 @@ public class EvaluationDetailDaoImpl implements EvaluationDetailDao {
 	}
 	
 	@Override
-	public EvaluationDetail getEvaluationDetailByInf(int cont_id, int cs_id, int et_id, String ed_num) {
+	public EvaluationDetail getEvaluationDetailByInf(int cs_id, int et_id, String ed_num) {
 		String sql = "select * from tb_eval_dtl where cs_id=" + cs_id +" and et_id=" + et_id 
-				+" and cont_id=" + cont_id +" and ed_num='" + ed_num +"'";
+				+" and ed_num='" + ed_num +"'";
 		
 		return template.query(sql, new ResultSetExtractor<EvaluationDetail>() {
 			@Override
@@ -98,7 +98,7 @@ public class EvaluationDetailDaoImpl implements EvaluationDetailDao {
 					ed.setEd_id(rs.getInt("ed_id"));
 					ed.setCont_id(rs.getInt("cont_id"));
 					ed.setCs_id(rs.getInt("cs_id"));
-					ed.setEd_id(rs.getInt("et_id"));
+					ed.setEt_id(rs.getInt("et_id"));
 					ed.setEd_num(rs.getString("ed_num"));
 					ed.setEd_points(rs.getDouble("ed_points"));
 					ed.setEd_score(rs.getDouble("ed_score"));

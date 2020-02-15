@@ -26,15 +26,15 @@
 <script type="text/javascript"> 
 
 	function getInf() {  
-		   var url = location.search; //获取url中"?"符后的字串  
-		   if (url.indexOf("?") != -1) {  
-		      var str = url.substr(url.indexOf("?")+1);  
-		      if (url.indexOf("=") != -1) {
-		    	  str = str.substr(str.indexOf("=")+1);  
-		    	  return str;
-		      }
-		   }  
-		}
+	   var url = location.search; //获取url中"?"符后的字串  
+	   if (url.indexOf("?") != -1) {  
+	      var str = url.substr(url.indexOf("?")+1);  
+	      if (url.indexOf("=") != -1) {
+	    	  str = str.substr(str.indexOf("=")+1);  
+	    	  return str;
+	      }
+	   }  
+	}
 		
 		
 	var courseSet;
