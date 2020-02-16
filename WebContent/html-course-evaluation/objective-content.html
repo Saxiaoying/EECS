@@ -125,7 +125,8 @@
 			type: 'POST',
 			data: JSON.stringify({
 				co_id:co_id,
-				pra_id:pra_id
+				pra_id:pra_id,
+				cs_id:cs_id
 			}),
 			dataType: 'json',
 			async:false,
@@ -148,7 +149,8 @@
 			type: 'POST',
 			data: JSON.stringify({
 				co_id:co_id,
-				pra_id:pra_id
+				pra_id:pra_id,
+				cs_id:cs_id
 			}),
 			dataType: 'json',
 			async:false,
@@ -170,7 +172,8 @@
 			type: 'POST',
 			data: JSON.stringify({
 				co_id:co_id,
-				cont_id:cont_id
+				cont_id:cont_id,
+				cs_id:cs_id
 			}),
 			dataType: 'json',
 			async:false,
@@ -192,7 +195,8 @@
 			type: 'POST',
 			data: JSON.stringify({
 				co_id:co_id,
-				cont_id:cont_id
+				cont_id:cont_id,
+				cs_id:cs_id
 			}),
 			dataType: 'json',
 			async:false,
@@ -238,6 +242,7 @@
 				}
 			}
 		}
+		alert('修改成功！');
 	}
 	$(function(){
 		getEtList();

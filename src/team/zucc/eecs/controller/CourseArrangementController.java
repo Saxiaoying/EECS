@@ -155,7 +155,7 @@ public class CourseArrangementController {
 			int f = courseArrangementService.updateCourseArrangement(cag_id, cs_id, tch_id, cag_num, cag_name);
 			
 			if (f==1) obj.put("state", "该教师已经在该时间段有同一个课程安排！");
-			else obj.put("state", "修改成功");
+			else obj.put("state", "OK");
 		} catch (Exception e) {
 			e.printStackTrace();
 			obj.put("state", "数据库错误！");
@@ -218,7 +218,7 @@ public class CourseArrangementController {
 			int f = courseArrangementService.addCourseArrangement(cs_id, tch_id, cag_num, cag_name);
 			
 			if (f==1) obj.put("state", "该教师已经在该时间段有同一个课程安排！");
-			else obj.put("state", "添加成功");
+			else obj.put("state", "OK");
 		} catch (Exception e) {
 			e.printStackTrace();
 			obj.put("state", "数据库错误！");

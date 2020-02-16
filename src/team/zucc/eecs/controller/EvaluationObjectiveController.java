@@ -66,7 +66,8 @@ public class EvaluationObjectiveController {
 	private PracticeObjectiveService practiceObjectiveService;
 	 
 	
-	
+	@RequestMapping(value = { "/getEvaluationObjective" }, method = RequestMethod.POST)
+	@ResponseBody
 	public JSONObject getEvaluationObjective(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
 		System.out.println("进入EvaluationObjectiveController-getEvaluationObjective");
@@ -76,13 +77,11 @@ public class EvaluationObjectiveController {
 			String coz_id = in.getString("coz_id");
 			String cs_acad_yr = in.getString("cs_acad_yr");
 			String cs_sem = in.getString("cs_sem");
-			
 			CourseSet courseSet = courseSetService.getCourseSetByCoz_idAndTime(coz_id, cs_acad_yr, cs_sem);
 			if(courseSet == null) {
 				obj.put("state", "暂无该开课信息！");
 				return obj;
 			}
-			
 			Course course = courseService.getCourseByCoz_id(courseSet.getCoz_id());
 			List<CourseObjective> courseObjectiveList = courseObjectiveService.getCourseObjectiveListByCs_id(courseSet.getCs_id());
 			if(courseObjectiveList == null) {
@@ -94,7 +93,6 @@ public class EvaluationObjectiveController {
 			}
 			List<EvaluationType> evaluationTypeList = new ArrayList<EvaluationType>();
 			evaluationTypeList = evaluationTypeService.getEvaluationTypeList();
-			
 			List<Evaluation> evaluationList = new ArrayList<Evaluation>();
 			for (CourseObjective co: courseObjectiveList) {
 				for (EvaluationType et: evaluationTypeList) {
@@ -106,12 +104,10 @@ public class EvaluationObjectiveController {
 					evaluationList.add(e);
 				}
 			}
-			
 			List<CourseContent> courseContentList = courseContentService.getCourseContentListByCs_id(courseSet.getCs_id());
 			if(courseContentList == null) {
 				courseContentList = new ArrayList<CourseContent>();
 			}
-			
 			List<CoursePractice> coursePracticeList = coursePracticeService.getCoursePracticeListByCs_id(courseSet.getCs_id());
 			if(coursePracticeList == null) {
 				coursePracticeList = new ArrayList<CoursePractice>();
@@ -127,7 +123,6 @@ public class EvaluationObjectiveController {
 			obj.put("coursePracticeList", coursePracticeList);
 			obj.put("coursePracticeList_num", coursePracticeList.size());
 			obj.put("state", "OK");
-
 
 
 			int [][]obj_cont = new int[courseObjectiveList.size()][courseContentList.size()];
@@ -160,6 +155,7 @@ public class EvaluationObjectiveController {
 			obj.put("state", "数据库错误！");
 			return obj;
 		}
+
 		return obj;
 	}
 	
@@ -167,7 +163,7 @@ public class EvaluationObjectiveController {
 	@ResponseBody
 	public JSONObject updateEvaluationObjective(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println("进入getEvaluationObjective-updateEvaluationObjective");
+		System.out.println("进入EvaluationObjectiveController-updateEvaluationObjective");
 		
 		JSONObject obj = new JSONObject();
 		try {
@@ -202,17 +198,20 @@ public class EvaluationObjectiveController {
 	@ResponseBody
 	public JSONObject addEvaluationObjectivePra(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println("进入getEvaluationObjective-addEvaluationObjectivePra");
+		System.out.println("进入EvaluationObjectiveController-addEvaluationObjectivePra");
 		
 		JSONObject obj = new JSONObject();
 		try {
 			int co_id = in.getIntValue("co_id");
 			int pra_id = in.getIntValue("pra_id");
-			
+			int cs_id = in.getIntValue("cs_id");
 			int f = practiceObjectiveService.addPracticeObjective(co_id, pra_id);
 			
 			if(f >= 0) {
 				obj.put("state", "OK");
+				
+				
+				evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co_id, cs_id, 1);
 			} else {
 				obj.put("state", "数据库错误！");
 			}
@@ -228,17 +227,18 @@ public class EvaluationObjectiveController {
 	@ResponseBody
 	public JSONObject addEvaluationObjectiveCont(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println("进入getEvaluationObjective-addEvaluationObjectiveCont");
+		System.out.println("进入EvaluationObjectiveController-addEvaluationObjectiveCont");
 		
 		JSONObject obj = new JSONObject();
 		try {
 			int co_id = in.getIntValue("co_id");
 			int cont_id = in.getIntValue("cont_id");
-			
+			int cs_id = in.getIntValue("cs_id");
 			int f = contentObjectiveService.addContentObjective(co_id, cont_id);
 			
 			if(f >= 0) {
 				obj.put("state", "OK");
+				evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co_id, cs_id, 2);
 			} else {
 				obj.put("state", "数据库错误！");
 			}
@@ -254,15 +254,17 @@ public class EvaluationObjectiveController {
 	@ResponseBody
 	public JSONObject delEvaluationObjectivePra(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println("进入getEvaluationObjective-delEvaluationObjectivePra");
+		System.out.println("进入EvaluationObjectiveController-delEvaluationObjectivePra");
 		
 		JSONObject obj = new JSONObject();
 		try {
 			int co_id = in.getIntValue("co_id");
 			int pra_id = in.getIntValue("pra_id");
+			int cs_id = in.getIntValue("cs_id");
 			PracticeObjective practiceObjective = practiceObjectiveService.getPracticeObjectiveByCo_idAndPra_id(co_id, pra_id);
 			if(practiceObjective == null) {
 				obj.put("state", "OK");
+				evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co_id, cs_id, 1);
 				return obj;
 			}
 			int f = practiceObjectiveService.deletePracticeObjectiveByPc_id(practiceObjective.getPc_id());
@@ -285,16 +287,17 @@ public class EvaluationObjectiveController {
 	@ResponseBody
 	public JSONObject delEvaluationObjectiveCont(@RequestBody JSONObject in, HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println("进入getEvaluationObjective-delEvaluationObjectiveCont");
+		System.out.println("进入EvaluationObjectiveController-delEvaluationObjectiveCont");
 		
 		JSONObject obj = new JSONObject();
 		try {
 			int co_id = in.getIntValue("co_id");
 			int cont_id = in.getIntValue("cont_id");
-			
+			int cs_id = in.getIntValue("cs_id");
 			ContentObjective contentObjective = contentObjectiveService.getContentObjectiveByCo_idAndCont_id(co_id, cont_id);
 			if(contentObjective == null) {
 				obj.put("state", "OK");
+				evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co_id, cs_id, 2);
 				return obj;
 			}
 			int f = contentObjectiveService.deleteContentObjectiveByCco_id(contentObjective.getCco_id());

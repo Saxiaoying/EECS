@@ -10,16 +10,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import team.zucc.eecs.dao.ContentObjectiveDao;
+import team.zucc.eecs.dao.CourseObjectiveDao;
+import team.zucc.eecs.dao.CourseSetDao;
 import team.zucc.eecs.dao.EvaluationDao;
 import team.zucc.eecs.dao.EvaluationDetailDao;
+import team.zucc.eecs.dao.EvaluationTypeDao;
 import team.zucc.eecs.dao.PracticeObjectiveDao;
 import team.zucc.eecs.model.ContentObjective;
+import team.zucc.eecs.model.CourseObjective;
+import team.zucc.eecs.model.CourseSet;
 import team.zucc.eecs.model.Evaluation;
 import team.zucc.eecs.model.EvaluationDetail;
+import team.zucc.eecs.model.EvaluationType;
 import team.zucc.eecs.model.PracticeObjective;
 
 @Component("EvaluationServiceImpl")
 public class EvaluationServiceImpl implements EvaluationService {
+	@Autowired
+	private  CourseObjectiveDao courseObjectiveDao;
+	
+	@Autowired
+	private  EvaluationTypeDao evaluationTypeDao;
+	
 	@Autowired
 	private  EvaluationDao evaluationDao;
 	
@@ -93,10 +105,21 @@ public class EvaluationServiceImpl implements EvaluationService {
 	@Override
 	public int updateEvaluationByCs_idAndCo_idAndEt_id(int co_id, int cs_id, int et_id) {
 		try {
-			Evaluation e = evaluationDao.getEvaluationByCs_idAndCo_idAndEt_id(cs_id, co_id, et_id);
-			if (e == null) {
+			CourseObjective courseObjective = courseObjectiveDao.getCourseObjectiveByCo_id(co_id);
+			if (courseObjective == null || courseObjective.getCs_id() != cs_id) {
 				return 1; //不存在
 			}
+			
+			EvaluationType evaluationType = evaluationTypeDao.getEvaluationTypeByEt_id(et_id);
+			if(evaluationType == null) {
+				return 1; //不存在
+			}
+			
+			Evaluation e = evaluationDao.getEvaluationByCs_idAndCo_idAndEt_id(cs_id, co_id, et_id);
+			if(e == null) {
+				evaluationDao.addEvaluation(co_id, cs_id, et_id, 0, 0, 0, 0, 0);
+			}
+			
 			if(et_id == 2) {
 				List<ContentObjective> contentObjectiveList = contentObjectiveDao.getContentObjectiveByCo_id(co_id);
 				Set<Integer> cont_idSet = new HashSet<Integer>();

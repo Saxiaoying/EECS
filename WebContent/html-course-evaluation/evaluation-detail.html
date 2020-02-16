@@ -109,7 +109,28 @@
 		});
 	}
 	
-	function del(){
+	function del(i){
+		$.ajax({
+			url: '/EECS/ajax/deleteEvaluationDetail',
+			type: 'POST',
+			data: JSON.stringify({
+				ed_id:evaluationDetailList[i].ed_id
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state == 'OK') {
+					alert("删除成功");
+					search();
+				} else {
+					alert(data.state);
+				}
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
 	}
 	
 	$(function(){
@@ -122,6 +143,7 @@
 		var et_id=evaluationDetailList[i].et_id;
 		if(et_id == 1) x_admin_show("修改评价明细——实验", "./evaluation-detail-update1.html?ed_id=" + ed_id, "500", "500");
 		else  x_admin_show("修改评价明细——考试", "./evaluation-detail-update2.html?ed_id=" + ed_id, "500", "500");
+		search();
 	}
 	
 	function show_data(){
@@ -137,6 +159,7 @@
 			document.getElementById("NUM").innerHTML = '序号';
 			document.getElementById("buttonAdd").onclick=function () {     
 				x_admin_show("添加评价明细-实验", "./evaluation-detail-add1.html?cs_id=" + courseSet.cs_id, "500", "500");
+				search();
 		    };
 			for(i = 0; i < evaluationDetailList_num; i++) {
 				document.getElementById("ed_" + i).style.display="";//显示
@@ -160,6 +183,7 @@
 			document.getElementById("NUM").innerHTML = '题号';
 			document.getElementById("buttonAdd").onclick=function () {     
 				x_admin_show("添加评价明细-考试", "./evaluation-detail-add2.html?cs_id=" + courseSet.cs_id, "500", "500");
+				search();
 		     };
 			for(i = 0; i < evaluationDetailList_num; i++) {
 				document.getElementById("ed_" + i).style.display="";//显示
@@ -211,7 +235,7 @@
 					              '<a title="修改" id="edUpdate_'+ i +'"onclick="f('+i+')" href="javascript:;">' + 
 					                '<i class="layui-icon">&#xe63c;</i>' + 
 					              '</a>' + 
-					              '<a title="删除" id="edDel_'+ i +'" onclick="" href="javascript:;">' + 
+					              '<a title="删除" id="edDel_'+ i +'" onclick="del('+i+')" href="javascript:;">' + 
 					                '<i class="layui-icon">&#xe640;</i>' + 
 					              '</a>' + 
 					            '</td>' + 
@@ -222,7 +246,6 @@
 						'</table>' +
 						'<div style="text-align: center">' +
 							'<button id="buttonAdd" class="layui-btn" onclick="" type="button">添加</button>' +
-							'<button class="layui-btn" onclick="del()" type="button">删除</button>' +
 						'</div>' +
 					'</div>' +
 				'</fieldset>' +

@@ -16,16 +16,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 
+import team.zucc.eecs.model.ContentObjective;
 import team.zucc.eecs.model.Course;
 import team.zucc.eecs.model.CourseContent;
 import team.zucc.eecs.model.CoursePractice;
 import team.zucc.eecs.model.CourseSet;
 import team.zucc.eecs.model.EvaluationDetail;
+import team.zucc.eecs.model.PracticeObjective;
+import team.zucc.eecs.service.ContentObjectiveService;
 import team.zucc.eecs.service.CourseContentService;
 import team.zucc.eecs.service.CoursePracticeService;
 import team.zucc.eecs.service.CourseService;
 import team.zucc.eecs.service.CourseSetService;
 import team.zucc.eecs.service.EvaluationDetailService;
+import team.zucc.eecs.service.EvaluationService;
+import team.zucc.eecs.service.PracticeObjectiveService;
 
 @Controller("EvaluationDetailController")
 public class EvaluationDetailController {
@@ -43,6 +48,16 @@ public class EvaluationDetailController {
 	
 	@Autowired
 	private CoursePracticeService  coursePracticeService;
+	
+	@Autowired
+	private EvaluationService  evaluationService;
+	
+	@Autowired
+	private PracticeObjectiveService practiceObjectiveService;
+	
+	
+	@Autowired
+	private ContentObjectiveService contentObjectiveService;
 	
 	@RequestMapping(value= {"/getEvaluationDetailList"}, method=RequestMethod.POST)
 	@ResponseBody
@@ -92,6 +107,7 @@ public class EvaluationDetailController {
 			obj.put("coursePracticeList", coursePracticeList);
 			obj.put("coursePracticeList_num", coursePracticeList.size());
 			obj.put("state", "OK");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			obj.put("state", "数据库错误！");
@@ -146,6 +162,19 @@ public class EvaluationDetailController {
 				return obj;
 			} else {
 				obj.put("state", "OK");
+				
+				
+				if(et_id == 1) {
+					List<PracticeObjective> poList = practiceObjectiveService.getPracticeObjectiveByPra_id(cont_id);
+					for (PracticeObjective po: poList) {
+						evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(po.getCo_id(), cs_id, et_id);
+					}
+				} else if(et_id == 2){
+					List<ContentObjective> coList = contentObjectiveService.getContentObjectiveByCont_id(cont_id);
+					for (ContentObjective co: coList) {
+						evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co.getCo_id(), cs_id, et_id);
+					}
+				}
 				return obj;
 			}
 			
@@ -229,6 +258,62 @@ public class EvaluationDetailController {
 				return obj;
 			} else {
 				obj.put("state", "OK");
+				
+				if(et_id == 1) {
+					List<PracticeObjective> poList = practiceObjectiveService.getPracticeObjectiveByPra_id(cont_id);
+					for (PracticeObjective po: poList) {
+						evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(po.getCo_id(), cs_id, et_id);
+					}
+				} else if(et_id == 2){
+					List<ContentObjective> coList = contentObjectiveService.getContentObjectiveByCont_id(cont_id);
+					for (ContentObjective co: coList) {
+						evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co.getCo_id(), cs_id, et_id);
+					}
+				}
+				return obj;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("state", "数据库错误！");
+			return obj;
+		}
+	}
+	
+	
+	@RequestMapping(value= {"/deleteEvaluationDetail"}, method=RequestMethod.POST)
+	@ResponseBody
+	public JSONObject deleteEvaluationDetail(@RequestBody JSONObject in, HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("进入EvaluationDetailController-deleteEvaluationDetail");
+
+		JSONObject obj = new JSONObject();
+		try {
+			int ed_id = in.getIntValue("ed_id");
+			
+			EvaluationDetail evaluationDetail = evaluationDetailService.getEvaluationDetailByEd_id(ed_id);
+			
+			int et_id = evaluationDetail.getEt_id();
+			int cont_id = evaluationDetail.getCont_id();
+			int cs_id = evaluationDetail.getCs_id();
+			
+			int f = evaluationDetailService.deleteEvaluationDetailByEd_id(ed_id);
+			if(f == -1) {
+				obj.put("state", "数据库错误！");
+				return obj;
+			} else {
+				obj.put("state", "OK");
+				
+				if(et_id == 1) {
+					List<PracticeObjective> poList = practiceObjectiveService.getPracticeObjectiveByPra_id(cont_id);
+					for (PracticeObjective po: poList) {
+						evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(po.getCo_id(), cs_id, et_id);
+					}
+				} else if(et_id == 2){
+					List<ContentObjective> coList = contentObjectiveService.getContentObjectiveByCont_id(cont_id);
+					for (ContentObjective co: coList) {
+						evaluationService.updateEvaluationByCs_idAndCo_idAndEt_id(co.getCo_id(), cs_id, et_id);
+					}
+				}
 				return obj;
 			}
 			
