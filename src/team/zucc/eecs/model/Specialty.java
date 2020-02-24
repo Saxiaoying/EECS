@@ -1,7 +1,9 @@
 package team.zucc.eecs.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.annotation.JSONField;
+@Component("Specialty")
 public class Specialty {
 	@JSONField(ordinal = 1)
 	private int spec_id;

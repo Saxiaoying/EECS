@@ -24,77 +24,83 @@
   <body>
     <div class="x-nav">
       <span class="layui-breadcrumb">
-        <a href="">首页</a>
-        <a href="">演示</a>
-        <a>
-          <cite>导航元素</cite></a>
+        <a href="">专业</a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:38px">ဂ</i></a>
     </div>
     <div class="x-body">
       <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so">
-          <input class="layui-input" placeholder="开始日" name="start" id="start">
-          <input class="layui-input" placeholder="截止日" name="end" id="end">
-          <div class="layui-input-inline">
-            <select name="contrller">
-              <option>支付状态</option>
-              <option>已支付</option>
-              <option>未支付</option>
-            </select>
-          </div>
-          <div class="layui-input-inline">
-            <select name="contrller">
-              <option>支付方式</option>
-              <option>支付宝</option>
-              <option>微信</option>
-              <option>货到付款</option>
-            </select>
-          </div>
-          <div class="layui-input-inline">
-            <select name="contrller">
-              <option value="">订单状态</option>
-              <option value="0">待确认</option>
-              <option value="1">已确认</option>
-              <option value="2">已收货</option>
-              <option value="3">已取消</option>
-              <option value="4">已完成</option>
-              <option value="5">已作废</option>
-            </select>
-          </div>
-          <input type="text" name="username"  placeholder="请输入订单号" autocomplete="off" class="layui-input">
+
+         <form class="layui-form layui-col-md12 x-so">
+          <input type="text" id="spec_name" name="spec_name"  placeholder="请输入专业名" autocomplete="off" class="layui-input">
+          <input type="text" id="spec_year" name="spec_year"  placeholder="请输入年份" autocomplete="off" class="layui-input">
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
-        </form>
+         </form>
       </div>
      
 
       <xblock>
-        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','./order-add.html')"><i class="layui-icon"></i>添加</button>
+  <!--       <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button> -->
+        <button class="layui-btn" onclick="x_admin_show('添加专业','./spec-add.html')"><i class="layui-icon"></i>添加</button>
       </xblock>
 
 	  <table id="demo" lay-filter="test"></table>
 	    <div class="layui-hide" id="tools">
-	    	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	    	<a class="layui-btn layui-btn-xs " lay-event="edit">编辑</a>
   			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </div>
     </div>
     <script>
 
 
+  //form 表单
+  layui.use('form', function(){
+  var form = layui.form;
+  
+  form.on('submit(sreach)', function(data){
+   usetable.reload({
+          where:{
+            spec_name:$("#spec_name").val(), 
+            spec_year:$("#spec_year").val(), 
+          }
+         , page:{
+              curr:1   //表格重载的时候将查询页数设为第一页
+        }
+    })
+  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+});
+});
+
+
+
+
+
+    var usetable ;
+    function searchSpec() {
+         alert($("#spec_name").val())
+          usetable.reload({
+              where:{
+                spec_name:$("#spec_name").val(), 
+                spec_year:$("#spec_year").val(), 
+              }
+             , page:{
+                  curr:1   //表格重载的时候将查询页数设为第一页
+              }
+          })
+    }
     //creat table
     layui.use('table', function(){
     var table = layui.table;
-  
-  //第一个实例
-	table.render({
+  //一个实例
+	usetable = table.render({
 	     elem: '#demo'
 	    ,method: 'post'
 	    ,url: '/EECS/ajax/loadspec' //数据接口
 	    ,page: true //开启分页
 	    ,cols: [[ //表头
-	      {field: 'spec_id', title: 'ID', sort: true, fixed: 'left'}
+        // {title: '操作'},
+	      {field: 'spec_id', title: '专业ID', sort: true, fixed: 'left'}
 	      ,{field: 'spec_name', title: '专业名'}
 	      ,{field: 'spec_year', title: '年份', sort: true}
 	      ,{title: '操作',toolbar: '#tools'}
@@ -107,25 +113,42 @@
 	  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 	  var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 	 
-	  // if(layEvent === 'detail'){ //查看
-	  //   //do somehing
-	  // } else 
 	  if(layEvent === 'del'){ //删除
 	    layer.confirm('真的删除行么',{title:'提示'}, function(index){
-	      obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
 	      layer.close(index);
-	      //向服务端发送删除指令
+
+	      $.ajax({
+			url: '/EECS/ajax/deletespec',
+			type: 'POST',
+			data: JSON.stringify({
+			    spec_id: data.spec_id, 
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state=="")
+					alert('删除成功');
+				else
+					alert(data.state)
+				obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+        usetable.reload({
+              page:{
+                  curr:1   //表格重载的时候将查询页数设为第一页
+              }
+          })
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+
 	    });
 	  }
 	   else if(layEvent === 'edit'){ //编辑
-	    //do something
-	    
-	    //同步更新缓存对应的值
-	    obj.update({
-	      username: '123'
-	      ,title: 'xxx'
-	    });
-	  } else if(layEvent === 'LAYTABLE_TIPS'){
+	       x_admin_show('专业编辑','./spec-edit.html?spec_id='+data.spec_id+'?spec_name='+data.spec_name+'?spec_year='+data.spec_year)
+	  } 
+    else if(layEvent === 'LAYTABLE_TIPS'){
 	    layer.alert('Hi，头部工具栏扩展的右侧图标。');
 	  }
 	});
@@ -133,66 +156,6 @@
 
 	});
 
-
-      layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#start' //指定元素
-        });
-
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#end' //指定元素
-        });
-      });
-
-       /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
-
-              if($(obj).attr('title')=='启用'){
-
-                //发异步把用户状态进行更改
-                $(obj).attr('title','停用')
-                $(obj).find('i').html('&#xe62f;');
-
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已停用!',{icon: 5,time:1000});
-
-              }else{
-                $(obj).attr('title','启用')
-                $(obj).find('i').html('&#xe601;');
-
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已启用!',{icon: 5,time:1000});
-              }
-              
-          });
-      }
-
-      /*用户-删除*/
-      function member_del(obj,id){
-          layer.confirm('确认要删除吗？',function(index){
-              //发异步删除数据
-              $(obj).parents("tr").remove();
-              layer.msg('已删除!',{icon:1,time:1000});
-          });
-      }
-
-
-
-      function delAll (argument) {
-
-        var data = tableCheck.getData();
-  
-        layer.confirm('确认要删除吗？'+data,function(index){
-            //捉到所有被选中的，发异步进行删除
-            layer.msg('删除成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
-        });
-      }
     </script>
   </body>
 

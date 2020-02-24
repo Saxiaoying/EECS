@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-L-admin1.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>教师编号
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_id" name="tch_id" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>教师姓名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_name" name="tch_name" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+           <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>职称
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_title" name="tch_title" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+                <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>最后学位
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_fin_degree" name="tch_fin_degree" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>学历
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_qualification" name="tch_qualification" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>毕业专业
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_prof" name="tch_prof" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+            <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>简介
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="tch_intro" name="tch_intro" required lay-verify="required"
+                  autocomplete="off" class="layui-input">
+           </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  增加
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use(['form','layer'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer;
+        
+
+          //监听提交
+          form.on('submit(add)', function(data){
+              $.ajax({
+                  url: '/EECS/ajax/addTeacherInfo',
+                  type: 'POST',
+                  data: JSON.stringify({
+                      tch_id: $("#tch_id").val(), 
+                      tch_name: $("#tch_name").val(), 
+                      tch_title: $("#tch_title").val(), 
+                      tch_fin_degree: $("#tch_fin_degree").val(), 
+                      tch_qualification: $("#tch_qualification").val(), 
+                      tch_prof: $("#tch_prof").val(), 
+                      tch_intro: $("#tch_intro").val(), 
+                  }),
+                  dataType: 'json',
+                  async:false,
+                  contentType: 'application/json;charset=UTF-8',
+                  success: function(data) {
+                    if(data.state==""){
+                      alert('添加成功');
+                      // 获得frame索引
+                      var index = parent.layer.getFrameIndex(window.name);
+                      //关闭当前frame
+                      parent.layer.close(index);
+                    }
+                    else
+                      alert(data.state)
+                  },
+                  error: function() {
+                    alert('服务器错误');
+                  }
+            });
+            return false;
+          });
+          
+          
+        });
+    </script>
+  </body>
+
+</html>

@@ -47,45 +47,64 @@ public class SpecialtyDaoImpl implements SpecialtyDao {
 		return specs;
 	}
 	
-//	public List<Student> loadAllStu() throws Exception{
-//		String sql = "select * from student";
-//		List<Student> students = new ArrayList<>();	
-//		jdbcTemplate.query(sql, new Object[] {},new RowCallbackHandler() {
-//			@Override
-//			public void processRow(ResultSet rs) throws SQLException {
-//				Student student = new Student();
-//				student.setUser_id(rs.getInt(1));
-//				student.setUser_name(rs.getString(2));
-//				student.setUser_pwd(rs.getString(3));
-//				student.setUser_finished_credit(rs.getInt(4));
-//				student.setUser_credit(rs.getInt(5));
-//				students.add(student);
-//			}
-//		});
-//		
-//		return students;
-//	}
+	@Override
+	public void deletespec(int spec_id)throws Exception{
+		 String sql = "select count(*) from tb_class where spec_id = ?";
+		 int count = template.queryForObject(sql, new Object[] {spec_id},Integer.class);
+		 if(count!=0)
+			 throw new Exception("该专业还存在班级无法删除");
+		 
+		 
+		sql = "delete from tb_spec where spec_id = ?";
+		template.update(sql,new Object[] {spec_id});
+	}
 	
-//	@Override
-//	public Specialty (int user_id) {
-//		return template.query("select * from `tb_user` where `user_id`=" + user_id, new ResultSetExtractor<User>() {
-//			@Override
-//			public User extractData(ResultSet rs) throws SQLException, DataAccessException {
-//				if (rs.next()) {
-//					User u = new User();
-//					u.setUser_id(rs.getInt("user_id"));
-//					u.setUser_name(rs.getString("user_name"));
-//					u.setUser_pwd(rs.getString("user_pwd"));
-//					u.setUser_log_t(rs.getTimestamp("user_log_t"));
-//					u.setUser_typ(rs.getInt("user_typ"));
-//					return u;
-//				} else {
-//					return null;
-//				}
-//			}
-//			
-//		});
-//	}
+	@Override
+	public void addspec(String spec_name,int spec_year) throws Exception{
+		
 
-
+		if("".equals(spec_name)||"".equals(spec_year))
+			throw new Exception("专业名或录入年份不能为空");
+		
+		String sql = "select count(*) from tb_spec where spec_name = ? and spec_year = ?";
+		int count = template.queryForObject(sql, new Object[] {spec_name,spec_year},Integer.class);
+		if(count!=0)
+			throw new Exception("该课程已经存在");
+		
+		sql = "insert into tb_spec(spec_name,spec_year) values(?,?)";
+		template.update(sql,new Object[] {spec_name,spec_year});
+		
+		return  ;
+	}
+	
+	@Override
+	public List<Specialty> loadSubSpecialty(String spec_name,String spec_year){
+		String sql = "select * from tb_spec where spec_name like ? and spec_year like ?";
+		List<Specialty> specs = new ArrayList<>();
+		template.query(sql, new Object[] {"%"+spec_name+"%","%"+spec_year+"%"},new RowCallbackHandler() {
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				Specialty spec= new Specialty();
+				spec.setSpec_id(rs.getInt("spec_id"));
+				spec.setSpec_name(rs.getString("spec_name"));
+				spec.setSpec_year(rs.getInt("spec_year"));
+				specs.add(spec);
+			}
+		});
+		return specs;
+	}
+	
+	@Override
+	public void editspec(int spec_id,String spec_name,int spec_year) throws Exception{
+	
+		String sql = "select count(*) from tb_spec where spec_name = ? and spec_year = ?";
+		int count = template.queryForObject(sql, new Object[] {spec_name,spec_year},Integer.class);
+		if(count!=0)
+			throw new Exception("该课程已经存在");
+		
+		sql = "update tb_spec set spec_name = ? , spec_year =? where spec_id = ?";
+		template.update(sql,new Object[] {spec_name,spec_year,spec_id});
+		
+		return  ;
+	}
 }

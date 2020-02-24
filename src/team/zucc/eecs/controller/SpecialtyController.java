@@ -1,5 +1,6 @@
 package team.zucc.eecs.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,62 +19,103 @@ import team.zucc.eecs.dao.SpecialtyDao;
 import team.zucc.eecs.dao.UserDao;
 import team.zucc.eecs.model.Specialty;
 import team.zucc.eecs.model.User;
+import team.zucc.eecs.service.SpecialtyService;
 
 
 @Controller("SpecialtyController")
 public class SpecialtyController {
 	@Autowired
-	private SpecialtyDao specdao;
+	private SpecialtyService specialtyservice;
 	
 	
 	@RequestMapping(value= {"/loadspec"}, method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject loadspec(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpServletRequest req = (HttpServletRequest) request;
+		String url = req.getRequestURI();
+		System.out.println("in loadspec");
+		//System.out.println("URl:"+url);
 		JSONObject obj = new JSONObject();
-		List <Specialty> specs = specdao.loadSpecialty();
+		List <Specialty> specs = new ArrayList<Specialty>();
 		int page = Integer.parseInt(request.getParameter("page"));
 		int limit = Integer.parseInt(request.getParameter("limit"));
+		
+		//System.out.println("tmp "+in.getString("spec_name"));
+		
+		String spec_name = request.getParameter("spec_name");
+		String spec_year = request.getParameter("spec_year");
+		
+		System.out.println(spec_name);
+		System.out.println(spec_year);
+		if((spec_name!=null||spec_year!=null)&&(spec_name!=""||spec_year!="")){
+			System.out.println("in");
+				specs = specialtyservice.loadSubSpecialty(spec_name,spec_year);
+		}
+		else {
+			specs = specialtyservice.loadSpecialty();
+		}
 		obj.put("code", "0");
 		obj.put("msg", "");
 		obj.put("count", specs.size());
 		obj.put("data", specs.subList(page*limit-limit,Math.min(page*limit, specs.size())));
 		return obj;
 	}
-/*	
-	@RequestMapping(value= {"/userLogin"}, method=RequestMethod.POST)
+	
+	@RequestMapping(value= {"/deletespec"}, method=RequestMethod.POST)
 	@ResponseBody
-	public JSONObject userLogin(@RequestBody JSONObject in, HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("进入UserLoginController-userLogin");
+	public JSONObject deletespec(@RequestBody JSONObject in,HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("in deletespec");
 		JSONObject obj = new JSONObject();
-		int user_id = in.getIntValue("user_id");
-		String pwd = in.getString("user_pwd");
+		//System.out.print(in.getString("spec_id"));
+		int spec_id = Integer.parseInt(in.getString("spec_id"));
+		//System.out.println(spec_id);
+		obj.put("state", "");
 		try {
-			User user = userDao.getUserById(user_id);
-			System.out.println(user);
-			if(user == null) {
-				obj.put("state", "NO_USER");
-				return obj;
-			}
-			
-			if(user.getUser_pwd().compareTo(pwd) == 0) {
-				request.getSession().setAttribute("USER_ID", user.getUser_id());
-				request.getSession().setAttribute("USER_NAME", user.getUser_name());
-				request.getSession().setAttribute("USER_PWD", user.getUser_pwd());
-				request.getSession().setAttribute("USER_LOG_T", user.getUser_log_t());
-				request.getSession().setAttribute("USER_TYP", user.getUser_typ());
-			} else {
-				obj.put("state", "WRONG_PWD");
-				return obj;
-			}
-		} catch (Exception e) {
-			obj.put("state", "ERROR");
-			e.printStackTrace();
-			return obj;
+			specialtyservice.deletespec(spec_id);
+		}catch (Exception e) {
+			obj.put("state", e.getMessage());
 		}
-		obj.put("state", "OK");
 		return obj;
 	}
-
-	*/
+	
+	@RequestMapping(value= {"/addspec"}, method=RequestMethod.POST)
+	@ResponseBody
+	public JSONObject addspec(@RequestBody JSONObject in,HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("in addspec");
+		JSONObject obj = new JSONObject();
+		System.out.println(in.getString("spec_name"));
+		//System.out.println(in.getString("spec_year"));
+		String spec_name = in.getString("spec_name");
+		int spec_year = Integer.parseInt(in.getString("spec_year"));
+		obj.put("state", "");
+		try {
+			specialtyservice.addspec(spec_name, spec_year);
+		}catch (Exception e) {
+			obj.put("state", e.getMessage());
+		}
+		return obj;
+	}
+	
+	@RequestMapping(value= {"/editspec"}, method=RequestMethod.POST)
+	@ResponseBody
+	public JSONObject editspec(@RequestBody JSONObject in,HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("in editspec");
+		JSONObject obj = new JSONObject();
+		//System.out.println(in.getString("spec_year"));
+		String spec_name = in.getString("spec_name");
+		int spec_year = Integer.parseInt(in.getString("spec_year"));
+		int spec_id = Integer.parseInt(in.getString("spec_id"));
+		//System.out.println(spec_name);
+		//System.out.println(spec_year);
+		//System.out.println(spec_id);
+		obj.put("state", "");
+		try {
+			specialtyservice.editspec(spec_id, spec_name,spec_year);
+		}catch (Exception e) {
+			obj.put("state", e.getMessage());
+		}
+		return obj;
+	}
 	
 }

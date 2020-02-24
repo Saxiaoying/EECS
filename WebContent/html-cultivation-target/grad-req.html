@@ -1,10 +1,160 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>毕业要求</title>
-</head>
-<body>
-毕业要求
-</body>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-L-admin1.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/layui/css/layui.css" media="all" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">毕业要求</a>
+      </span>
+      <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+
+         <form class="layui-form layui-col-md12 x-so">
+          <input type="text" id="ct_id" name="ct_id"  placeholder="请输入培养目标ID" autocomplete="off" class="layui-input">
+          <input type="text" id="gr_title" name="gr_title"  placeholder="请输入毕业要求标题" autocomplete="off" class="layui-input">
+          <input type="text" id="gr_content" name="gr_content"  placeholder="请输入毕业要求内容" autocomplete="off" class="layui-input">
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+         </form>
+      </div>
+     
+
+      <xblock>
+  <!--       <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button> -->
+        <button class="layui-btn" onclick="x_admin_show('添加毕业要求','./grad-req-add.html')"><i class="layui-icon"></i>添加</button>
+      </xblock>
+
+	  <table id="demo" lay-filter="test"></table>
+	    <div class="layui-hide" id="tools">
+	    	<a class="layui-btn layui-btn-xs " lay-event="edit">编辑</a>
+  			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </div>
+    </div>
+    <script>
+
+
+  //form 表单
+  layui.use('form', function(){
+  var form = layui.form;
+  
+  form.on('submit(sreach)', function(data){
+   usetable.reload({
+          where:{
+            ct_id:$("#ct_id").val(), 
+            gr_title:$("#gr_title").val(), 
+            gr_content:$("#gr_content").val(), 
+          }
+         , page:{
+              curr:1   //表格重载的时候将查询页数设为第一页
+        }
+    })
+  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+});
+});
+
+
+
+    var usetable ;
+    //creat table
+    layui.use(['table','util'], function(){
+    var table = layui.table;
+
+    var util = layui.util;
+  //一个实例
+	usetable = table.render({
+	     elem: '#demo'
+	    ,method: 'post'
+	    ,url: '/EECS/ajax/loadGradReq' //数据接口
+	    ,page: true //开启分页
+	    ,cols: [[ //表头
+        // {title: '操作'},
+	      {field: 'gr_id', title: '毕业要求ID', sort: true, fixed: 'left'}
+	      ,{field: 'ct_id', title: '培养目标ID', sort: true}
+	      ,{field: 'gr_code', title: '毕业要求序号', sort: true}
+	      ,{field: 'gr_title', title: '毕业要求标题', sort: true}
+	      ,{field: 'gr_content', title: '毕业要求内容', sort: true}
+	      ,{title: '操作',toolbar: '#tools'}
+	    ]]
+	  });
+	//	      ,{field: 'cs_time', title: '转专业时间', templet:function(d){return layui.util.toDateString(d.cs_time*1000)}}
+	  
+		//,templet:function(d){return util.toDateString(d.commPosttime*1000, "yyyy-MM-dd HH:mm:ss");}
+	  //	      ,{field: 'cs_time', title: '转专业时间', sort: true,templet: function (d) {
+      //                    return util.toDateString(d.cs_time * 1000, "yyyy-MM-dd HH:mm:ss")}}
+	//监听工具条 
+	table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+	  var data = obj.data; //获得当前行数据
+	  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+	  var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+	 
+	  if(layEvent === 'del'){ //删除
+	    layer.confirm('真的删除行么',{title:'提示'}, function(index){
+	      layer.close(index);
+
+	      $.ajax({
+			url: '/EECS/ajax/deleteGradReq',
+			type: 'POST',
+			data: JSON.stringify({
+			    gr_id: data.gr_id, 
+			    ct_id: data.ct_id,
+			    gr_code:data.gr_code,
+			}),
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			success: function(data) {
+				if(data.state=="")
+					alert('删除成功');
+				else
+					alert(data.state)
+				obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+        usetable.reload({
+              page:{
+                  curr:1   //表格重载的时候将查询页数设为第一页
+              }
+          })
+			},
+			error: function() {
+				alert('服务器错误');
+			}
+		});
+
+	    });
+	  }
+	   else if(layEvent === 'edit'){ //编辑
+	       x_admin_show('毕业要求编辑','./grad-req-edit.html?gr_id='+data.gr_id)
+	  } 
+    else if(layEvent === 'LAYTABLE_TIPS'){
+	    layer.alert('Hi，头部工具栏扩展的右侧图标。');
+	  }
+	});
+
+
+	});
+
+    </script>
+  </body>
+
 </html>
