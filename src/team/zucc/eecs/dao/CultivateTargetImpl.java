@@ -73,7 +73,7 @@ public class CultivateTargetImpl implements CultivateTargetDao {
 		if(count!=0)
 			throw new Exception("该年份的培养目标已经存在");
 		sql  = "select count(*) from tb_spec where spec_id = ?";
-		count = template.queryForObject(sql, new Object[] {spec_id,ct_year},Integer.class);
+		count = template.queryForObject(sql, new Object[] {spec_id},Integer.class);
 		if(count==0)
 			throw new Exception("该专业不存在");
 		Timestamp d = new Timestamp(System.currentTimeMillis()); 
